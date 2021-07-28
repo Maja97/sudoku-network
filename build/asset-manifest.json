@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.5c07faf1.chunk.css",
+    "main.js": "/static/js/main.d0ad5444.chunk.js",
+    "main.js.map": "/static/js/main.d0ad5444.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.37cbda90.js",
+    "runtime-main.js.map": "/static/js/runtime-main.37cbda90.js.map",
+    "static/js/2.cfc90580.chunk.js": "/static/js/2.cfc90580.chunk.js",
+    "static/js/2.cfc90580.chunk.js.map": "/static/js/2.cfc90580.chunk.js.map",
+    "static/js/3.69c4e8c9.chunk.js": "/static/js/3.69c4e8c9.chunk.js",
+    "static/js/3.69c4e8c9.chunk.js.map": "/static/js/3.69c4e8c9.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.5c07faf1.chunk.css.map": "/static/css/main.5c07faf1.chunk.css.map",
+    "static/js/2.cfc90580.chunk.js.LICENSE.txt": "/static/js/2.cfc90580.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/static/media/Poppins-ThinItalic.32743a4d.ttf",
+    "static/media/background_main.png": "/static/media/background_main.3fa0123d.png",
+    "static/media/login_illustration.3c840901.svg": "/static/media/login_illustration.3c840901.svg",
+    "static/media/logo.png": "/static/media/logo.e5e3f3ea.png",
+    "static/media/playful_cat.d57e9cce.svg": "/static/media/playful_cat.d57e9cce.svg",
+    "static/media/register_hello_illustration.f5218429.svg": "/static/media/register_hello_illustration.f5218429.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.37cbda90.js",
+    "static/js/2.cfc90580.chunk.js",
+    "static/css/main.5c07faf1.chunk.css",
+    "static/js/main.d0ad5444.chunk.js"
+  ]
+}

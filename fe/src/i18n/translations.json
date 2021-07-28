@@ -1,0 +1,18 @@
+{
+  "hr": {
+    "translation": {
+      "login_title": "Prijavite se u Sudoku Network",
+      "register_title": "Sudoku network - registracija",
+
+      "login_error": "Neuspješna prijava"
+    }
+  },
+  "en": {
+    "translation": {
+      "login_title": "Log in to Sudoku Network",
+      "register_title": "Sudoku network - register",
+
+      "login_error": "Login unsuccessful"
+    }
+  }
+}
