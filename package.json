@@ -11,5 +11,8 @@
     "heroku-postbuild": "cd fe && yarn install && yarn run build"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^6.2.0"
+  }
 }
