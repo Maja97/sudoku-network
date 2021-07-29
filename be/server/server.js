@@ -6,5 +6,9 @@ const app = express();
 
 routesIndex(app);
 app.use(cors());
-app.use("/", express.static(path.join(__dirname, "dist")));
+app.use(express.static("build"));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "build", "index.html"));
+});
 app.listen(process.env.PORT || 80);
