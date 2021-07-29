@@ -5,4 +5,4 @@ const app = express();
 
 routesIndex(app);
 
-app.listen(process.env.PORT || 3001);
+app.listen(process.env.PORT || 80);
