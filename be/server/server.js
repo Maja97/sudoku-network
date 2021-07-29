@@ -3,7 +3,6 @@ import routesIndex from "./routes/index.js";
 import cors from "cors";
 import path from "path";
 
-const path = path;
 const app = express();
 
 routesIndex(app);
