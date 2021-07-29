@@ -1,4 +1,5 @@
 import redis from "redis";
+import url from "url";
 
 var redisURL = url.parse(process.env.REDIS_URL);
 
