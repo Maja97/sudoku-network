@@ -1,6 +1,6 @@
 import { json, urlencoded } from "express";
-import usersRouter from "../routes/users.js";
-import authRouter from "../routes/auth.js";
+import usersRouter from "./users.js";
+import authRouter from "./auth.js";
 
 const routesIndex = (app) => {
   app.use(json());

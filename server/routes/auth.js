@@ -4,7 +4,7 @@ import db from "../db/auth.js";
 import jwt from "jsonwebtoken";
 import jwtDecode from "jwt-decode";
 import dotenv from "dotenv";
-import redisClient from "../redis_connect.js";
+import redisClient from "../redis_connect.js.js";
 import { verifyRefreshToken } from "../functions/auth.js";
 import { loginRules, registerRules } from "../helpers/authHelper.js";
 dotenv.config();
