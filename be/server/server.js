@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "client", "build")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "fe", "build", "index.tsx"));
+  res.sendFile(path.join("../fe", "build", "index.tsx"));
 });
 
 app.listen(process.env.PORT || 3001);
