@@ -8,4 +8,4 @@ routesIndex(app);
 app.use(cors());
 app.use(express.static("build"));
 
-app.listen(process.env.PORT || 80);
+app.listen(process.env.PORT || 3001);
