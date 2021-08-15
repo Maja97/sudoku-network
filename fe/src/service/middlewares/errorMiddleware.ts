@@ -1,6 +1,6 @@
 import { showNotification } from "../../redux/notification/notificationRedux";
 import { User } from "../../types/User";
-import { Service } from "../service";
+import { Service, SudokuProps } from "../service";
 import { AppDispatch } from "../../redux/store";
 
 class ErrorMiddleware implements Service {
@@ -64,6 +64,14 @@ class ErrorMiddleware implements Service {
   public async refreshToken(token: string): Promise<string> {
     try {
       return this.next.refreshToken(token);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async isUnique(props: SudokuProps): Promise<number> {
+    try {
+      return this.next.isUnique(props);
     } catch (e) {
       throw e;
     }

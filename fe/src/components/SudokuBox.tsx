@@ -7,7 +7,6 @@ interface Props {
   data: CellProps[][];
   index: number;
   type: SudokuTypeProps;
-  onCellChange: (cellIndex: number, value: number) => void;
 }
 
 export interface CellProps {
@@ -16,7 +15,7 @@ export interface CellProps {
   error: boolean;
 }
 
-const SudokuBox = ({ data, index, type, onCellChange }: Props) => {
+const SudokuBox = ({ data, index, type }: Props) => {
   const classes = useStyles();
   return (
     <Box className={classes.box}>
@@ -24,20 +23,11 @@ const SudokuBox = ({ data, index, type, onCellChange }: Props) => {
         <div style={{ display: "flex" }} key={`cellRow-${boxRow}`}>
           {item.map((cell, boxCol) => (
             <SudokuCell
-              cellValue={cell.value}
               disabled={cell.disabled}
               cellError={cell.error}
               cellKey={`${index}-${boxRow}-${boxCol}`}
               key={`${index}-${boxRow}-${boxCol}`}
               name={`${index}-${boxRow}-${boxCol}`}
-              onCellChange={(value: number) => {
-                onCellChange(
-                  (Math.floor(index / type.boxRows) * type.boxRows + boxRow) *
-                    type.size +
-                    ((index % type.boxRows) * type.boxColumns + boxCol),
-                  value
-                );
-              }}
             />
           ))}
         </div>

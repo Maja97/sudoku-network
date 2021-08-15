@@ -1,6 +1,5 @@
 import { Router } from "express";
 import db from "../db/users.js";
-import { verifyToken } from "../functions/auth.js";
 
 const router = Router();
 

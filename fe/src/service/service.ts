@@ -1,4 +1,6 @@
 import { AxiosResponse } from "axios";
+import { CellProps } from "../components/SudokuBox";
+import { SudokuTypeProps } from "../constants/sudokuTypes";
 import store from "../redux/store";
 import { User } from "../types/User";
 import AxiosInstance from "./axios";
@@ -6,17 +8,32 @@ import Client from "./middlewares/clientMiddleware";
 import ErrorMiddleware from "./middlewares/errorMiddleware";
 import LoadingMiddleware from "./middlewares/loadingMiddleware";
 
+export interface SudokuProps {
+  board: CellProps[][];
+  count: number;
+  type: SudokuTypeProps;
+  row: number;
+  col: number;
+}
+
 interface AuthService {
   login(email: string, password: string): Promise<string>;
   register(user: User, password: string): Promise<void>;
   logout(): Promise<void>;
   checkToken(): Promise<void>;
-  readUserById(userId: number): Promise<User>;
   refreshToken(refreshToken: string): Promise<string>;
 }
 
-export const services = ["auth", "users"];
-export type ServiceNames = "auth" | "users";
+interface UsersService {
+  readUserById(userId: number): Promise<User>;
+}
+
+interface GameService {
+  isUnique(props: SudokuProps): Promise<number>;
+}
+
+export const services = ["auth", "users", "game"];
+export type ServiceNames = "auth" | "users" | "game";
 let service: Service;
 
 const responseBody = (response: AxiosResponse) => response.data;
@@ -38,7 +55,7 @@ const instances: any = {};
 
 services.forEach((service) => (instances[service] = requests(service)));
 
-export interface Service extends AuthService {}
+export interface Service extends AuthService, UsersService, GameService {}
 
 const client = new Client(instances, store.dispatch);
 const errorMiddleware = new ErrorMiddleware(client, store.dispatch);

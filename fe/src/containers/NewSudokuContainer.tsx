@@ -8,23 +8,21 @@ import {
 } from "../helpers/sudokuConstraints";
 import { CellProps } from "../components/SudokuBox";
 import { FormProvider, useForm } from "react-hook-form";
-import { generateEmptyGrid, isUnique, solveSudoku } from "../helpers/game";
+import { generateEmptyGrid } from "../helpers/game";
+import service from "../service/service";
 
 const NewSudokuContainer = () => {
   // ima li grešaka u gridu -> data.some((item) => item.find((x) => x.error))
 
   const [data, setData] = React.useState<CellProps[][]>([]);
+  const [inputs, setInputs] = React.useState<CellProps[][]>([]);
   const formMethods = useForm();
+  const watchAll = formMethods.watch();
 
   const [sudokuTypeName, setSudokuTypeName] = React.useState<string>(
     sudokuType.standard.name
   );
   const [type, setType] = React.useState<SudokuTypeProps>(sudokuType.standard);
-
-  const errors = React.useMemo(
-    () => data.some((item) => item.find((x) => x.error)),
-    [data]
-  );
 
   React.useEffect(() => {
     const newType = Object.values(sudokuType).find(
@@ -43,28 +41,43 @@ const NewSudokuContainer = () => {
     []
   );
 
-  const onCellChange = React.useCallback(
-    (cellIndex: number, value: number) => {
-      const copy = [...data];
-      const row = rowFromIndex(cellIndex, type.size);
-      const column = columnFromIndex(cellIndex, type.size);
+  const onCheckUnique = React.useCallback(async () => {
+    if (Object.values(watchAll).length > 0) {
+      const transformed = [...Array(type.size).keys()]
+        .map((index) => {
+          let row: any = [];
 
-      const error = !checkForConstraints(data, row, column, type, value);
-
-      copy[row][column] = { value: value, error: error, disabled: false };
-      setData(copy);
-    },
-    [data, type]
-  );
-
-  const onCheckUnique = React.useCallback(() => {
-    const copy = data.map((a) => a.map((item) => ({ ...item })));
-    const copy2 = data.map((a) => a.map((item) => ({ ...item })));
-    console.log(isUnique(copy, 0, type, 0, 0));
-    if (solveSudoku(copy, type)) {
-      console.log(copy);
-    } else console.log("no solution sorrey");
-  }, [data, type.size]);
+          [...Array(type.boxRows).keys()].forEach((chunk) => {
+            row.push(
+              Object.values(watchAll).slice(
+                Math.floor(index / type.boxRows) * type.size * type.boxRows +
+                  type.boxColumns * (index % type.boxRows) +
+                  chunk * type.size,
+                Math.floor(index / type.boxRows) * type.size * type.boxRows +
+                  +type.boxColumns * (index % type.boxRows) +
+                  chunk * type.size +
+                  type.boxColumns
+              )
+            );
+          });
+          return row.flat();
+        })
+        .map((row) =>
+          row.map((item: string) => ({
+            value: item ? parseInt(item) : 0,
+            error: false,
+            disabled: false,
+          }))
+        );
+      setInputs(transformed);
+      const copy = transformed.map((a) => a.map((item: any) => ({ ...item })));
+      console.log(transformed);
+      await service
+        .isUnique({ board: transformed, count: 0, type: type, row: 0, col: 0 })
+        .then((res) => console.log(res, "number of solutions"))
+        .catch((e) => console.log(e, "error in finding uniqueness"));
+    }
+  }, [watchAll, type]);
 
   return (
     <FormProvider {...formMethods}>
@@ -72,7 +85,6 @@ const NewSudokuContainer = () => {
         data={data}
         sudokuTypeName={sudokuTypeName}
         type={type}
-        onCellChange={onCellChange}
         onTypeChange={onTypeChange}
         onCheckUnique={onCheckUnique}
       />

@@ -6,10 +6,9 @@ import SudokuBox, { CellProps } from "./SudokuBox";
 interface Props {
   data: CellProps[][];
   type: SudokuTypeProps;
-  onCellChange: (cellIndex: number, value: number) => void;
 }
 
-const SudokuGrid = ({ data, type, onCellChange }: Props) => {
+const SudokuGrid = ({ data, type }: Props) => {
   const classes = useStyles();
 
   const boxData = React.useMemo(() => {
@@ -32,19 +31,11 @@ const SudokuGrid = ({ data, type, onCellChange }: Props) => {
             }
             key={`box-${index}`}
           >
-            <SudokuBox
-              data={box}
-              index={index}
-              type={type}
-              onCellChange={(cellIndex: number, value: number) =>
-                onCellChange(cellIndex, value)
-              }
-              key={index}
-            />
+            <SudokuBox data={box} index={index} type={type} key={index} />
           </div>
         );
       }),
-    [boxData, onCellChange, type.breaks, classes.left, classes.clear]
+    [boxData, type.breaks, classes.left, classes.clear]
   );
 
   return <Box>{rows}</Box>;

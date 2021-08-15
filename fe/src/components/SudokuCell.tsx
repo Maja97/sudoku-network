@@ -3,22 +3,13 @@ import { Box, makeStyles, TextField } from "@material-ui/core";
 import { Controller, useFormContext } from "react-hook-form";
 
 interface Props {
-  cellValue: number;
   disabled: boolean;
   cellError: boolean;
   name: string;
   cellKey: string;
-  onCellChange: (value: number) => void;
 }
 
-const SudokuCell = ({
-  cellValue,
-  disabled,
-  name,
-  cellError,
-  cellKey,
-  onCellChange,
-}: Props) => {
+const SudokuCell = ({ disabled, name, cellError, cellKey }: Props) => {
   const classes = useStyles({ error: cellError });
   const { control } = useFormContext();
 
@@ -27,11 +18,11 @@ const SudokuCell = ({
       <Controller
         name={name}
         control={control}
-        defaultValue={cellValue === 0 ? "" : cellValue}
+        defaultValue=""
         render={({ field: { value, onChange } }) => (
           <TextField
             disabled={disabled}
-            value={cellValue === 0 ? "" : value}
+            value={value}
             inputProps={{ maxLength: 1 }}
             InputProps={{
               disableUnderline: true,
@@ -40,10 +31,7 @@ const SudokuCell = ({
                 focused: classes.focused,
               },
             }}
-            onChange={(e) => {
-              onChange(e);
-              onCellChange(parseInt(e.target.value));
-            }}
+            onChange={onChange}
             onFocus={(e) => {
               e.target.select();
             }}

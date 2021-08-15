@@ -1,6 +1,7 @@
 export const SudokuGridType = {
   STANDARD: "STANDARD",
 };
+
 export interface SudokuTypeProps {
   name: string;
   boxRows: number;

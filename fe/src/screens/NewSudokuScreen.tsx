@@ -16,7 +16,6 @@ interface Props {
   data: CellProps[][];
   sudokuTypeName: string;
   type: SudokuTypeProps;
-  onCellChange: (cellIndex: number, value: number) => void;
   onTypeChange: (event: React.ChangeEvent<{ value: unknown }>) => void;
   onCheckUnique: () => void;
 }
@@ -25,7 +24,6 @@ const NewSudokuScreen = ({
   data,
   sudokuTypeName,
   type,
-  onCellChange,
   onTypeChange,
   onCheckUnique,
 }: Props) => {
@@ -35,7 +33,7 @@ const NewSudokuScreen = ({
     <Box py={5}>
       <Grid container>
         <Grid item md={6} style={{ display: "flex", justifyContent: "center" }}>
-          <SudokuGrid data={data} type={type} onCellChange={onCellChange} />
+          <SudokuGrid data={data} type={type} />
         </Grid>
         <Grid item md={1}></Grid>
         <Grid item md={5}>

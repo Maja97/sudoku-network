@@ -50,6 +50,7 @@ export function isUnique(
   row: number,
   col: number
 ): number {
+  if (count > 1) return count;
   if (row === type.size) {
     row = 0;
     if (++col === type.size) return 1 + count;

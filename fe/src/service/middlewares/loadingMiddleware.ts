@@ -2,7 +2,7 @@ import loadingKeys from "../../constants/loading";
 import { startLoading, stopLoading } from "../../redux/loading/loadingRedux";
 import { AppDispatch } from "../../redux/store";
 import { User } from "../../types/User";
-import { Service } from "../service";
+import { Service, SudokuProps } from "../service";
 
 class LoadingMiddleware implements Service {
   constructor(private next: Service, private dispatch: AppDispatch) {}
@@ -57,6 +57,14 @@ class LoadingMiddleware implements Service {
   public async refreshToken(token: string): Promise<string> {
     try {
       return this.next.refreshToken(token);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async isUnique(props: SudokuProps): Promise<number> {
+    try {
+      return this.next.isUnique(props);
     } catch (e) {
       throw e;
     }

@@ -1,7 +1,7 @@
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants/auth";
 import { TokenData } from "../../helpers/auth";
 import jwtDecode from "jwt-decode";
-import { Service, ServiceNames, RequestTypes } from "../service";
+import { Service, ServiceNames, RequestTypes, SudokuProps } from "../service";
 import { AppDispatch } from "../../redux/store";
 import { removeUser, setUser } from "../../redux/auth/authRedux";
 import { User, userFromJSON, userToJSON } from "../../types/User";
@@ -68,6 +68,17 @@ class Client implements Service {
       refreshToken: refreshToken,
     });
     return res.token;
+  }
+
+  public async isUnique(props: SudokuProps): Promise<number> {
+    const res = await this.clientInstances.game.post("isUnique", {
+      board: props.board,
+      count: props.count,
+      type: props.type,
+      row: props.row,
+      col: props.col,
+    });
+    return res;
   }
 }
 

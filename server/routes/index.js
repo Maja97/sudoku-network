@@ -1,6 +1,7 @@
 import { json, urlencoded } from "express";
 import usersRouter from "./users.js";
 import authRouter from "./auth.js";
+import gameRouter from "./game.js";
 
 const routesIndex = (app) => {
   app.use(json());
@@ -12,6 +13,7 @@ const routesIndex = (app) => {
   });
   app.use("/users", usersRouter);
   app.use("/auth", authRouter);
+  app.use("/game", gameRouter);
 };
 
 export default routesIndex;
