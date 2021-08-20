@@ -1,7 +1,6 @@
 import React from "react";
 import { ACCESS_TOKEN } from "../constants/auth";
 import MainRouter from "../routes/MainRouter";
-import Notification from "../components/Notification";
 import { setHeaders } from "../service/axios";
 import service from "../service/service";
 
@@ -26,12 +25,7 @@ const AuthenticationWrapper = () => {
     }
   }, []);
   if (loading) return null;
-  return (
-    <>
-      <MainRouter />
-      <Notification />
-    </>
-  );
+  return <MainRouter />;
 };
 
 export default AuthenticationWrapper;

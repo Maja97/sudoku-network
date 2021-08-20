@@ -1,5 +1,5 @@
 import pool from "./index.js";
-let db = {};
+const db = {};
 
 db.all = () => {
   return new Promise((resolve, reject) => {
@@ -13,7 +13,7 @@ db.all = () => {
 
 db.one = (id) => {
   return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM users WHERE id = ?", [id], (err, res) => {
+    pool.query("SELECT * FROM users WHERE user_id = ?", [id], (err, res) => {
       if (err) return reject(err);
       return resolve(res);
     });

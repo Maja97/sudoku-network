@@ -4,6 +4,13 @@ export const PASSWORD_MIN_LENGTH = 5;
 export const USERNAME_MIN_LENGTH = 6;
 export const NAME_MIN_LENGTH = 2;
 export const MAX_LENGTH = 100;
+export const MAX_SUDOKU_NAME_LENGTH = 50;
+
+export interface SaveSudoku {
+  rules: (t: (value: string) => string) => {
+    name: Partial<RulesInterface> | undefined;
+  };
+}
 
 export interface Login {
   rules: (t: (value: string) => string) => {
@@ -21,6 +28,17 @@ export interface Register {
     username: Partial<RulesInterface> | undefined;
   };
 }
+
+export const saveSudokuRules: SaveSudoku = {
+  rules: (t: (value: string) => string) => ({
+    name: {
+      maxLength: rules(t).maxLength(
+        MAX_SUDOKU_NAME_LENGTH,
+        `Maximum Sudoku name length is ${MAX_SUDOKU_NAME_LENGTH}`
+      ),
+    },
+  }),
+};
 
 export const loginRules: Login = {
   rules: (t: (value: string) => string) => ({

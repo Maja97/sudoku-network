@@ -1,4 +1,5 @@
 import { ValidationRule, ValidationValueMessage } from "react-hook-form";
+import { EMAIL_PATTERN } from "./regex";
 
 export function rules(t: (value: string) => string) {
   return {
@@ -7,17 +8,16 @@ export function rules(t: (value: string) => string) {
       message: "Field required",
     },
     emailPattern: {
-      value:
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      value: EMAIL_PATTERN,
       message: "Invalid email",
     },
     minLength: (value: number, message?: string) => ({
       value,
-      message: message ? "Min length translation" : `Min length is ${value}`,
+      message: message ? message : `Minimum length required is ${value}`,
     }),
     maxLength: (value: number, message?: string) => ({
       value,
-      message: message ? "Max length translation" : `Max length is ${value}`,
+      message: message ? message : `Maximum allowed length is ${value}`,
     }),
   };
 }

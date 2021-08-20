@@ -1,10 +1,17 @@
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants/auth";
 import { TokenData } from "../../helpers/auth";
 import jwtDecode from "jwt-decode";
-import { Service, ServiceNames, RequestTypes, SudokuProps } from "../service";
+import {
+  Service,
+  ServiceNames,
+  RequestTypes,
+  SudokuProps,
+  SavedSudokuType,
+} from "../service";
 import { AppDispatch } from "../../redux/store";
 import { removeUser, setUser } from "../../redux/auth/authRedux";
 import { User, userFromJSON, userToJSON } from "../../types/User";
+import { CellData } from "../../components/SudokuBox";
 
 class Client implements Service {
   constructor(
@@ -70,7 +77,7 @@ class Client implements Service {
     return res.token;
   }
 
-  public async isUnique(props: SudokuProps): Promise<number> {
+  public async isUnique(props: SudokuProps): Promise<boolean> {
     const res = await this.clientInstances.game.post("isUnique", {
       board: props.board,
       count: props.count,
@@ -79,6 +86,16 @@ class Client implements Service {
       col: props.col,
     });
     return res;
+  }
+
+  public async saveSudoku(
+    board: number[][],
+    published: boolean
+  ): Promise<void> {
+    await this.clientInstances.game.post("saveSudoku", {
+      board: JSON.stringify(board),
+      published: published,
+    });
   }
 }
 

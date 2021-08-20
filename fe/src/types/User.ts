@@ -5,6 +5,7 @@ export interface User {
   username: string;
   phone?: string;
 }
+
 export function userFromJSON(maybe: any): User {
   if (!maybe) throw Error("object must exist");
   if (typeof maybe.email !== "string") throw Error("email must be string");

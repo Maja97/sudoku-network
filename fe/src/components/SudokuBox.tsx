@@ -4,18 +4,19 @@ import SudokuCell from "./SudokuCell";
 import { SudokuTypeProps } from "../constants/sudokuTypes";
 
 interface Props {
-  data: CellProps[][];
+  data: CellData[][];
   index: number;
   type: SudokuTypeProps;
+  checkConstraints: (value: string, row: number, column: number) => void;
 }
 
-export interface CellProps {
+export interface CellData {
   value: number;
   disabled: boolean;
   error: boolean;
 }
 
-const SudokuBox = ({ data, index, type }: Props) => {
+const SudokuBox = ({ data, index, type, checkConstraints }: Props) => {
   const classes = useStyles();
   return (
     <Box className={classes.box}>
@@ -23,11 +24,20 @@ const SudokuBox = ({ data, index, type }: Props) => {
         <div style={{ display: "flex" }} key={`cellRow-${boxRow}`}>
           {item.map((cell, boxCol) => (
             <SudokuCell
+              cellValue={cell.value}
+              type={type}
               disabled={cell.disabled}
               cellError={cell.error}
               cellKey={`${index}-${boxRow}-${boxCol}`}
               key={`${index}-${boxRow}-${boxCol}`}
-              name={`${index}-${boxRow}-${boxCol}`}
+              name={`${type.name}[${index}-${boxRow}-${boxCol}]`}
+              checkConstraints={(value) => {
+                const row =
+                  Math.floor(index / type.boxRows) * type.boxRows + boxRow;
+                const column =
+                  (index % type.boxRows) * type.boxColumns + boxCol;
+                checkConstraints(value, row, column);
+              }}
             />
           ))}
         </div>

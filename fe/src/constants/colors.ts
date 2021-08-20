@@ -2,11 +2,14 @@ const colors = {
   white: "#FFFFFF",
   black: "#000000",
   purple: "#a349a4",
-  darkPurple: "#573647",
-  lilac: "#BD93BD",
+  darkPurple: "#6e316f",
+  lightBlue: "#bbd4ec",
   lightestGrey: "#e9e3f5",
   lightYellow: "#f7f056",
+  yellow: "#F6D522",
   darkBlueGrey: "#3f3d56",
+  lightRed: "#ffc7c7",
+  red: "#F24343",
 };
 
 export default colors;

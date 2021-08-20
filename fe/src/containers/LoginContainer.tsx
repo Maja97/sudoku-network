@@ -2,9 +2,9 @@ import jwtDecode from "jwt-decode";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { onTokenNotFound, TokenData } from "../helpers/auth";
-import { goToHomePage } from "../helpers/navigation";
+import { goToHomePage, goToNewSudoku } from "../helpers/navigation";
 import { setUser } from "../redux/auth/authRedux";
 import { RootState } from "../redux/store";
 import LoginScreen from "../screens/LoginScreen";
@@ -21,7 +21,9 @@ export const loginFields = {
 };
 
 const LoginContainer = () => {
+  const location = useLocation();
   const user = useSelector((state: RootState) => state.auth.user);
+  const board = useSelector((state: RootState) => state.board.board);
   const history = useHistory();
   const dispatch = useDispatch();
   const formMethods = useForm<LoginData>();
@@ -36,13 +38,15 @@ const LoginContainer = () => {
         const token = await service.login(data.email, data.password);
         const decoded: TokenData = jwtDecode(token);
         const userInfo = await service.readUserById(decoded.userID);
+        if (location.state && board)
+          goToNewSudoku(history, { board: board.board, type: board.type });
+        else goToHomePage(history);
         dispatch(setUser(userInfo));
-        goToHomePage(history);
       } catch (e) {
         onTokenNotFound(dispatch);
       }
     },
-    [dispatch, history]
+    [dispatch, history, location, board]
   );
 
   return (

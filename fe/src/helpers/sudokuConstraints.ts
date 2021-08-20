@@ -1,8 +1,8 @@
-import { CellProps } from "../components/SudokuBox";
+import { CellData } from "../components/SudokuBox";
 import { SudokuTypeProps } from "../constants/sudokuTypes";
 
 export const checkForConstraints = (
-  grid: CellProps[][],
+  grid: CellData[][],
   rowIndex: number,
   columnIndex: number,
   sudokuType: SudokuTypeProps,
@@ -16,21 +16,23 @@ export const checkForConstraints = (
 };
 
 export const checkRow = (
-  grid: CellProps[][],
+  grid: CellData[][],
   value: number,
   rowIndex: number
-) => grid[rowIndex].every((item) => item.value !== value);
+) => {
+  return grid[rowIndex].filter((item) => item.value === value).length <= 1;
+};
 
 export const checkColumn = (
-  grid: CellProps[][],
+  grid: CellData[][],
   value: number,
   columnIndex: number
 ) => {
-  return grid.every((item) => item[columnIndex].value !== value);
+  return grid.filter((item) => item[columnIndex].value === value).length <= 1;
 };
 
 export const checkBox = (
-  grid: CellProps[][],
+  grid: CellData[][],
   value: number,
   row: number,
   column: number,
@@ -44,7 +46,7 @@ export const checkBox = (
     .map((item) => {
       return item.slice(boxStartColumn, boxStartColumn + sudokuType.boxColumns);
     });
-  return box.every((item) => item.every((x) => x.value !== value));
+  return box.flat().filter((item) => item.value === value).length <= 1;
 };
 
 export const rowFromIndex = (index: number, gridSize: number) =>

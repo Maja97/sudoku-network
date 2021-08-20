@@ -1,7 +1,8 @@
 import { showNotification } from "../../redux/notification/notificationRedux";
 import { User } from "../../types/User";
-import { Service, SudokuProps } from "../service";
+import { SavedSudokuType, Service, SudokuProps } from "../service";
 import { AppDispatch } from "../../redux/store";
+import { CellData } from "../../components/SudokuBox";
 
 class ErrorMiddleware implements Service {
   constructor(private next: Service, private dispatch: AppDispatch) {}
@@ -69,9 +70,20 @@ class ErrorMiddleware implements Service {
     }
   }
 
-  public async isUnique(props: SudokuProps): Promise<number> {
+  public async isUnique(props: SudokuProps): Promise<boolean> {
     try {
       return this.next.isUnique(props);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async saveSudoku(
+    board: number[][],
+    published: boolean
+  ): Promise<void> {
+    try {
+      await this.next.saveSudoku(board, published);
     } catch (e) {
       throw e;
     }

@@ -1,14 +1,15 @@
 import { Box, makeStyles } from "@material-ui/core";
 import React from "react";
 import { SudokuTypeProps } from "../constants/sudokuTypes";
-import SudokuBox, { CellProps } from "./SudokuBox";
+import SudokuBox, { CellData } from "./SudokuBox";
 
 interface Props {
-  data: CellProps[][];
+  data: CellData[][];
   type: SudokuTypeProps;
+  checkConstraints: (value: string, row: number, column: number) => void;
 }
 
-const SudokuGrid = ({ data, type }: Props) => {
+const SudokuGrid = ({ data, type, checkConstraints }: Props) => {
   const classes = useStyles();
 
   const boxData = React.useMemo(() => {
@@ -31,11 +32,17 @@ const SudokuGrid = ({ data, type }: Props) => {
             }
             key={`box-${index}`}
           >
-            <SudokuBox data={box} index={index} type={type} key={index} />
+            <SudokuBox
+              data={box}
+              index={index}
+              type={type}
+              key={index}
+              checkConstraints={checkConstraints}
+            />
           </div>
         );
       }),
-    [boxData, type.breaks, classes.left, classes.clear]
+    [boxData, classes.left, classes.clear, type, checkConstraints]
   );
 
   return <Box>{rows}</Box>;

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import colors from "../../constants/colors";
 
 export interface NotificationInterface {
@@ -8,29 +8,25 @@ export interface NotificationInterface {
 }
 
 interface NotificationState {
-  notification: NotificationInterface;
-  shown: boolean;
+  notification: NotificationInterface | undefined;
 }
 
 const initialState: NotificationState = {
-  notification: {
-    message: "",
-    color: colors.white,
-    backgroundColor: colors.black,
-  },
-  shown: false,
+  notification: undefined,
 };
 
 const notificationSlice = createSlice({
   name: "notification",
   initialState,
   reducers: {
-    showNotification: (state, action) => {
+    showNotification: (
+      state,
+      action: PayloadAction<NotificationInterface | undefined>
+    ) => {
       state.notification = action.payload;
-      state.shown = true;
     },
     hideNotification: (state) => {
-      state.shown = false;
+      state.notification = undefined;
     },
   },
 });

@@ -20,7 +20,7 @@ import VisibilityOffRoundedIcon from "@material-ui/icons/VisibilityOffRounded";
 import { useTranslation } from "react-i18next";
 import { translations } from "../i18n/translations";
 import { loginRules } from "../helpers/rules";
-import ErrorIcon from "@material-ui/icons/Error";
+import ErrorIcon from "@material-ui/icons/ErrorOutline";
 
 interface Props {
   handleSubmit: () => void;
@@ -69,8 +69,10 @@ const LoginScreen = ({ handleSubmit }: Props) => {
               />
               {errors.email && (
                 <FormHelperText className={classes.error} error>
-                  <ErrorIcon type="secondary" />
-                  <span>{errors.email?.message}</span>
+                  <ErrorIcon fontSize="small" />
+                  <span className={classes.errorText}>
+                    {errors.email?.message}
+                  </span>
                 </FormHelperText>
               )}
             </div>
@@ -78,6 +80,7 @@ const LoginScreen = ({ handleSubmit }: Props) => {
               <Controller
                 defaultValue=""
                 name={loginFields.password}
+                rules={loginRules.rules(t).password}
                 render={({ field: { value, onChange } }) => (
                   <LocalTextField
                     name={loginFields.password}
@@ -101,6 +104,14 @@ const LoginScreen = ({ handleSubmit }: Props) => {
                   />
                 )}
               />
+              {errors.password && (
+                <FormHelperText className={classes.error} error>
+                  <ErrorIcon fontSize="small" />
+                  <span className={classes.errorText}>
+                    {errors.password?.message}
+                  </span>
+                </FormHelperText>
+              )}
             </div>
             <MainButton text="Log in" type="primary" onClick={handleSubmit} />
           </Grid>
@@ -143,9 +154,15 @@ const useStyles = makeStyles({
   emailWrapper: {
     paddingTop: "60px",
     paddingBottom: "45px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   passwordWrapper: {
     paddingBottom: "55px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   textfield: {
     width: "60%",
@@ -156,7 +173,10 @@ const useStyles = makeStyles({
   },
   error: {
     width: "60%",
-    textAlign: "center",
+    display: "flex",
+  },
+  errorText: {
+    paddingLeft: "5px",
   },
 });
 export default LoginScreen;

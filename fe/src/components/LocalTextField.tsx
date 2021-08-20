@@ -7,11 +7,12 @@ interface Props {
   name: string;
   type?: string;
   label?: string;
-  onChange: () => void;
+  helperText?: string;
   value: string;
   error?: boolean;
   className?: string;
   endAdornment?: React.ReactElement;
+  onChange: () => void;
 }
 
 const LocalTextField = ({
@@ -22,11 +23,13 @@ const LocalTextField = ({
   value,
   error,
   className,
-  onChange,
+  helperText,
   endAdornment,
+  onChange,
 }: Props) => {
   return (
     <TextField
+      helperText={helperText}
       placeholder={placeholder}
       name={name}
       type={type}

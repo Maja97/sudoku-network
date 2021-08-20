@@ -1,10 +1,10 @@
-import { CellProps } from "../components/SudokuBox";
+import { CellData } from "../components/SudokuBox";
 import { sudokuType, SudokuTypeProps } from "../constants/sudokuTypes";
 import { checkForConstraints } from "./sudokuConstraints";
 
 export const generateEmptyGrid = (
   sudokuType: SudokuTypeProps
-): CellProps[][] => {
+): CellData[][] => {
   return Array(sudokuType.size)
     .fill(0)
     .map(() =>
@@ -12,7 +12,7 @@ export const generateEmptyGrid = (
     );
 };
 
-export function solveSudoku(board: CellProps[][], type: SudokuTypeProps) {
+export function solveSudoku(board: CellData[][], type: SudokuTypeProps) {
   let gridFilled = true;
   let row = -1;
   let col = -1;
@@ -44,7 +44,7 @@ export function solveSudoku(board: CellProps[][], type: SudokuTypeProps) {
 }
 
 export function isUnique(
-  board: CellProps[][],
+  board: CellData[][],
   count: number,
   type: SudokuTypeProps,
   row: number,
@@ -71,7 +71,7 @@ export function isUnique(
   return count;
 }
 
-export function solve(board: CellProps[][], n: number) {
+export function solve(board: CellData[][], n: number) {
   let row = -1;
   let col = -1;
   let isEmpty = true;

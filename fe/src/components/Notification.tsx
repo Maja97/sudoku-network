@@ -6,10 +6,12 @@ import { hideNotification } from "../redux/notification/notificationRedux";
 
 const Notification = () => {
   const dispatch = useDispatch();
-  const notification = useSelector((state: RootState) => state.notification);
+  const notification = useSelector(
+    (state: RootState) => state.notification.notification
+  );
   const classes = useStyles({
-    color: notification.notification.color,
-    backgroundColor: notification.notification.backgroundColor,
+    color: notification ? notification.color : "",
+    backgroundColor: notification ? notification.backgroundColor : "",
   });
 
   const handleClose = React.useCallback(() => {
@@ -19,9 +21,9 @@ const Notification = () => {
   return (
     <Snackbar
       autoHideDuration={3000}
-      open={notification.shown}
+      open={Boolean(notification)}
       onClose={handleClose}
-      message={notification.notification.message}
+      message={notification?.message}
       ContentProps={{
         className: classes.notification,
       }}

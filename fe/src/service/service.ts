@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { CellProps } from "../components/SudokuBox";
+import { CellData } from "../components/SudokuBox";
 import { SudokuTypeProps } from "../constants/sudokuTypes";
 import store from "../redux/store";
 import { User } from "../types/User";
@@ -9,11 +9,17 @@ import ErrorMiddleware from "./middlewares/errorMiddleware";
 import LoadingMiddleware from "./middlewares/loadingMiddleware";
 
 export interface SudokuProps {
-  board: CellProps[][];
+  board: CellData[][];
   count: number;
   type: SudokuTypeProps;
   row: number;
   col: number;
+}
+
+export enum SavedSudokuType {
+  USER_PUBLISHED = "user-published",
+  USER_SAVED = "user-saved",
+  GENERATED = "generated",
 }
 
 interface AuthService {
@@ -29,7 +35,8 @@ interface UsersService {
 }
 
 interface GameService {
-  isUnique(props: SudokuProps): Promise<number>;
+  isUnique(props: SudokuProps): Promise<boolean>;
+  saveSudoku(board: number[][], published: boolean): Promise<void>;
 }
 
 export const services = ["auth", "users", "game"];

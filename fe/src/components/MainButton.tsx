@@ -3,18 +3,23 @@ import { Button, makeStyles } from "@material-ui/core";
 import fonts from "../constants/fonts";
 import colors from "../constants/colors";
 
-type buttonType = "primary" | "secondary";
+type ButtonType = "primary" | "secondary";
 
 interface Props {
   text: string;
-  type?: string;
+  type?: ButtonType;
+  className?: string;
   onClick: () => void;
 }
 
-const MainButton = ({ text, type = "primary", onClick }: Props) => {
+const MainButton = ({ text, type = "primary", className, onClick }: Props) => {
   const classes = useStyles();
+
   return (
-    <Button className={classes.button} onClick={onClick}>
+    <Button
+      className={`${classes.button} ${classes[type]} ${className}`}
+      onClick={onClick}
+    >
       {text}
     </Button>
   );
@@ -22,16 +27,26 @@ const MainButton = ({ text, type = "primary", onClick }: Props) => {
 
 const useStyles = makeStyles({
   button: {
-    backgroundColor: "#f6d522",
     borderRadius: "50px",
     padding: "10px 50px",
     fontFamily: fonts.medium,
     fontSize: "16px",
-    color: colors.darkBlueGrey,
     textTransform: "capitalize",
+  },
+  primary: {
+    backgroundColor: colors.yellow,
+    color: colors.darkBlueGrey,
     "&:hover": {
       backgroundColor: colors.darkBlueGrey,
       color: colors.white,
+    },
+  },
+  secondary: {
+    color: colors.white,
+    backgroundColor: colors.darkBlueGrey,
+    "&:hover": {
+      backgroundColor: colors.yellow,
+      color: colors.darkBlueGrey,
     },
   },
 });

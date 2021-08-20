@@ -37,7 +37,7 @@ router.post("/login", loginRules, async (req, res) => {
     let results = await db.login(email, password);
 
     if (results.length > 0) {
-      const user = { sub: results[0].email, userID: results[0].id };
+      const user = { sub: results[0].email, userID: results[0].user_id };
       const token = jwt.sign(user, process.env.JWT_ACCESS_SECRET, {
         expiresIn: process.env.JWT_ACCESS_TIME,
       });
@@ -48,7 +48,7 @@ router.post("/login", loginRules, async (req, res) => {
         token: token,
         refreshToken: refreshToken,
       };
-      redisClient.get(user.userID.toString(), (err, data) => {
+      redisClient.get(user.userID?.toString(), (err, data) => {
         if (err) console.log(err);
         redisClient.set(
           user.userID.toString(),
