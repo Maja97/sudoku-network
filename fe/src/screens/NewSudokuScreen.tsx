@@ -8,6 +8,7 @@ import {
   Select,
   Typography,
   Checkbox,
+  InputLabel,
 } from "@material-ui/core";
 import { CheckCircleOutline, RadioButtonUnchecked } from "@material-ui/icons";
 import React from "react";
@@ -23,12 +24,15 @@ import { sudokuType, SudokuTypeProps } from "../constants/sudokuTypes";
 import { saveSudokuFields } from "../containers/NewSudokuContainer";
 import { saveSudokuRules } from "../helpers/rules";
 import { User } from "../types/User";
+import newSudokuImage from "../assets/svgs/new_sudoku_illustration.svg";
+import Navbar from "../components/Navbar";
 
 interface Props {
   data: CellData[][];
   sudokuTypeName: string;
   type: SudokuTypeProps;
   unique: boolean;
+  imageRef: any;
   user: User | undefined;
   onTypeChange: (event: React.ChangeEvent<{ value: unknown }>) => void;
   onCheckUnique: () => void;
@@ -43,6 +47,7 @@ const NewSudokuScreen = ({
   type,
   unique,
   user,
+  imageRef,
   onTypeChange,
   onCheckUnique,
   checkConstraints,
@@ -130,64 +135,78 @@ const NewSudokuScreen = ({
   );
 
   return (
-    <Box py={5}>
-      <Grid container>
-        <Grid item md={6} style={{ display: "flex", justifyContent: "center" }}>
-          <SudokuGrid
-            data={data}
-            type={type}
-            checkConstraints={checkConstraints}
-          />
-        </Grid>
-        <Grid item md={1}></Grid>
-        <Grid item md={3}>
-          <FormControl variant="outlined">
-            <div>Sudoku type</div>
-            <Select value={sudokuTypeName} onChange={onTypeChange}>
-              {Object.values(sudokuType).map((item) => (
-                <MenuItem key={item.name} value={item.name}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <div className={classes.button}>
-            <MainButton
-              text="Check for unique solution"
-              onClick={onCheckUnique}
+    <>
+      <Navbar pageName="Add new Sudoku" />
+      <Box py={5} px={5}>
+        <Grid container spacing={4}>
+          <Grid item md={7} xs={12} className={classes.gridContainer}>
+            <SudokuGrid
+              imageRef={imageRef}
+              data={data}
+              type={type}
+              checkConstraints={checkConstraints}
             />
-          </div>
-          {unique && (
-            <div>
-              <Typography>
-                Nice job! The Sudoku you've entered has a unique solution. You
-                can save it and publish it if you want to!
-              </Typography>
+            {unique && (
+              <div className={classes.unique}>
+                <Typography>
+                  Nice job! The Sudoku you've entered has a unique solution. You
+                  can save it and publish it if you want to!
+                </Typography>
+                <MainButton
+                  className={classes.saveButton}
+                  type="secondary"
+                  text="Publish or save Sudoku"
+                  onClick={onSaveSudokuButtonPress}
+                />
+              </div>
+            )}
+          </Grid>
+          <Grid item md={3}>
+            <FormControl classes={{ root: classes.formControl }}>
+              <InputLabel shrink>Sudoku type</InputLabel>
+              <Select value={sudokuTypeName} onChange={onTypeChange}>
+                {Object.values(sudokuType).map((item) => (
+                  <MenuItem key={item.name} value={item.name}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <div className={classes.button}>
               <MainButton
-                className={classes.saveButton}
-                type="secondary"
-                text="Publish or save Sudoku"
-                onClick={onSaveSudokuButtonPress}
+                text="Check for unique solution"
+                onClick={onCheckUnique}
               />
             </div>
-          )}
+
+            <img
+              src={newSudokuImage}
+              style={{ width: "-webkit-fill-available" }}
+              alt=""
+            />
+          </Grid>
         </Grid>
-      </Grid>
-      <CustomModal
-        title="Save your unique Sudoku puzzle"
-        ref={modalRef}
-        content={modalContent}
-        acceptButtonAction={user ? onSaveSudoku : goToLogin}
-        acceptButtonText={acceptButtonText}
-      />
-    </Box>
+        <CustomModal
+          title="Save your unique Sudoku puzzle"
+          ref={modalRef}
+          content={modalContent}
+          acceptButtonAction={user ? onSaveSudoku : goToLogin}
+          acceptButtonText={acceptButtonText}
+        />
+      </Box>
+    </>
   );
 };
 
 const useStyles = makeStyles({
+  gridContainer: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+  },
   button: {
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 45,
+    paddingBottom: 40,
   },
   saveButton: {
     marginTop: 30,
@@ -206,6 +225,14 @@ const useStyles = makeStyles({
   },
   spacing: {
     paddingBottom: 10,
+  },
+  formControl: {
+    minWidth: 150,
+  },
+  unique: {
+    width: "80%",
+    paddingTop: 20,
+    textAlign: "center",
   },
 });
 

@@ -13,6 +13,8 @@ import colors from "../constants/colors";
 import { goToLogin } from "../helpers/navigation";
 import { useHistory, useLocation } from "react-router-dom";
 import { setBoard } from "../redux/board/boardRedux";
+import { toBlob } from "html-to-image";
+import { Sudoku } from "../types/Sudoku";
 
 export type SudokuData = {
   name: string;
@@ -34,6 +36,8 @@ const NewSudokuContainer = () => {
   const location = useLocation<NewSudokuLocationProps>();
   const [data, setData] = React.useState<CellData[][]>([]);
   const [unique, setUnique] = React.useState<boolean>(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+
   const dispatch = useDispatch<AppDispatch>();
   const history = useHistory();
   const formMethods = useForm();
@@ -48,6 +52,7 @@ const NewSudokuContainer = () => {
   );
 
   const onCheckUnique = React.useCallback(async () => {
+    let board = data.map((item) => item.map((x) => x.value));
     if (errors)
       dispatch(
         showNotification({
@@ -58,7 +63,7 @@ const NewSudokuContainer = () => {
       );
     else {
       await service
-        .isUnique({ board: data, count: 0, type: type, row: 0, col: 0 })
+        .isUnique({ board: board, count: 0, type: type, row: 0, col: 0 })
         .then((res) => {
           if (!res)
             dispatch(
@@ -71,6 +76,7 @@ const NewSudokuContainer = () => {
           setUnique(res);
         })
         .catch((e) => {
+          console.log(e);
           dispatch(
             showNotification({
               message: "An error occured, try again",
@@ -83,12 +89,12 @@ const NewSudokuContainer = () => {
   }, [type, data, dispatch, errors]);
 
   React.useEffect(() => {
-    if (location.state) {
+    if (location.state && location.state.board && location.state.type) {
       setData(location.state.board);
       setType(location.state.type);
       setSudokuTypeName(location.state.type.name);
-    }
-  }, [location.state]);
+    } else setData(generateEmptyGrid(type));
+  }, [location.state, type]);
 
   const onTypeChange = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -133,12 +139,33 @@ const NewSudokuContainer = () => {
   const onSaveSudoku = React.useCallback(
     async (fieldData: SudokuData) => {
       const board = data.map((item) => item.map((x) => x.value));
-      await service
-        .saveSudoku(board, fieldData.publish)
-        .then((res) => console.log(res, "success"))
-        .catch((err) => console.log(err));
+      let binaryData: string | ArrayBuffer | null = "";
+      if (ref.current)
+        await toBlob(ref.current)
+          .then((item) => {
+            const reader = new FileReader();
+            if (item) {
+              reader.readAsDataURL(item);
+              reader.onloadend = () => {
+                if (reader.result) binaryData = reader.result;
+                console.log(reader.result ? reader.result : "");
+                const sudoku: Sudoku = {
+                  type: type.identifier,
+                  board: board,
+                  boardImage: binaryData,
+                  username: user ? user.username : null,
+                  boardName: fieldData.name,
+                };
+                service
+                  .saveSudoku(sudoku, fieldData.publish)
+                  .then((res) => console.log(res, "success"))
+                  .catch((err) => console.log(err));
+              };
+            }
+          })
+          .catch((e) => console.log(e));
     },
-    [data]
+    [data, user, type.identifier]
   );
 
   const navigateToLogin = React.useCallback(() => {
@@ -154,6 +181,7 @@ const NewSudokuContainer = () => {
         type={type}
         unique={unique}
         user={user}
+        imageRef={ref}
         onTypeChange={onTypeChange}
         onCheckUnique={onCheckUnique}
         checkConstraints={checkConstraints}

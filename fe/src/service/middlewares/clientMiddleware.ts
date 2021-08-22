@@ -1,17 +1,11 @@
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants/auth";
 import { TokenData } from "../../helpers/auth";
 import jwtDecode from "jwt-decode";
-import {
-  Service,
-  ServiceNames,
-  RequestTypes,
-  SudokuProps,
-  SavedSudokuType,
-} from "../service";
+import { Service, ServiceNames, RequestTypes, SudokuProps } from "../service";
 import { AppDispatch } from "../../redux/store";
 import { removeUser, setUser } from "../../redux/auth/authRedux";
 import { User, userFromJSON, userToJSON } from "../../types/User";
-import { CellData } from "../../components/SudokuBox";
+import { Sudoku, sudokuFromJSON, sudokuToJSON } from "../../types/Sudoku";
 
 class Client implements Service {
   constructor(
@@ -88,14 +82,16 @@ class Client implements Service {
     return res;
   }
 
-  public async saveSudoku(
-    board: number[][],
-    published: boolean
-  ): Promise<void> {
+  public async saveSudoku(sudoku: Sudoku, published: boolean): Promise<void> {
     await this.clientInstances.game.post("saveSudoku", {
-      board: JSON.stringify(board),
+      ...sudokuToJSON(sudoku),
       published: published,
     });
+  }
+
+  public async getAllSudoku(): Promise<any> {
+    const res = await this.clientInstances.game.get("getAll", {});
+    return res.map((board: any) => sudokuFromJSON(board));
   }
 }
 

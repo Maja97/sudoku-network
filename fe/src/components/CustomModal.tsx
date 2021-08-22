@@ -6,7 +6,9 @@ import {
   DialogTitle,
   makeStyles,
   Typography,
+  Zoom,
 } from "@material-ui/core";
+import { TransitionProps } from "@material-ui/core/transitions/transition";
 import React from "react";
 import colors from "../constants/colors";
 
@@ -20,6 +22,13 @@ interface Props {
   acceptButtonText: string;
   acceptButtonAction: () => void;
 }
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & { children?: React.ReactElement<any, any> },
+  ref: React.Ref<unknown>
+) {
+  return <Zoom in={true} ref={ref} {...props} />;
+});
 
 const CustomModal = (
   { title, content, acceptButtonText, acceptButtonAction }: Props,
@@ -37,7 +46,7 @@ const CustomModal = (
   React.useImperativeHandle(ref, (): ModalRef => ({ openDialog }));
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} TransitionComponent={Transition}>
       <DialogTitle>
         <Typography classes={{ root: classes.title }}>{title}</Typography>
       </DialogTitle>

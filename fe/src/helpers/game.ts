@@ -12,6 +12,8 @@ export const generateEmptyGrid = (
     );
 };
 
+export const generatePrefilledGrid = () => {};
+
 export function solveSudoku(board: CellData[][], type: SudokuTypeProps) {
   let gridFilled = true;
   let row = -1;

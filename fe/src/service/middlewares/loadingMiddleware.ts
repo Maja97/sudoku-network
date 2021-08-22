@@ -1,9 +1,9 @@
-import { CellData } from "../../components/SudokuBox";
 import loadingKeys from "../../constants/loading";
 import { startLoading, stopLoading } from "../../redux/loading/loadingRedux";
 import { AppDispatch } from "../../redux/store";
+import { Sudoku } from "../../types/Sudoku";
 import { User } from "../../types/User";
-import { SavedSudokuType, Service, SudokuProps } from "../service";
+import { Service, SudokuProps } from "../service";
 
 class LoadingMiddleware implements Service {
   constructor(private next: Service, private dispatch: AppDispatch) {}
@@ -33,8 +33,12 @@ class LoadingMiddleware implements Service {
 
   public async logout(): Promise<void> {
     try {
-      return await this.next.logout();
+      this.dispatch(startLoading(loadingKeys.LOGOUT));
+      const res = await this.next.logout();
+      this.dispatch(stopLoading(loadingKeys.LOGOUT));
+      return res;
     } catch (e) {
+      this.dispatch(stopLoading(loadingKeys.LOGOUT));
       throw e;
     }
   }
@@ -75,13 +79,25 @@ class LoadingMiddleware implements Service {
     }
   }
 
-  public async saveSudoku(
-    board: number[][],
-    published: boolean
-  ): Promise<void> {
+  public async saveSudoku(sudoku: Sudoku, published: boolean): Promise<void> {
     try {
-      await this.next.saveSudoku(board, published);
+      this.dispatch(startLoading(loadingKeys.SAVE_SUDOKU));
+      await this.next.saveSudoku(sudoku, published);
+      this.dispatch(stopLoading(loadingKeys.SAVE_SUDOKU));
     } catch (e) {
+      this.dispatch(stopLoading(loadingKeys.SAVE_SUDOKU));
+      throw e;
+    }
+  }
+
+  public async getAllSudoku(): Promise<any> {
+    try {
+      this.dispatch(startLoading(loadingKeys.GET_ALL_SUDOKU));
+      const res = await this.next.getAllSudoku();
+      this.dispatch(stopLoading(loadingKeys.GET_ALL_SUDOKU));
+      return res;
+    } catch (e) {
+      this.dispatch(stopLoading(loadingKeys.GET_ALL_SUDOKU));
       throw e;
     }
   }

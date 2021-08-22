@@ -52,7 +52,7 @@ const RegisterScreen = ({ handleSubmit }: Props) => {
           {t(translations.register_title)}
         </Typography>
         <Grid container>
-          <Grid item md={6}>
+          <Grid item md={6} style={{ textAlign: "center" }}>
             <div className={classes.firstNameWrapper}>
               <Controller
                 defaultValue=""
@@ -246,7 +246,10 @@ const RegisterScreen = ({ handleSubmit }: Props) => {
 };
 
 const useStyles = makeStyles({
-  error: {},
+  error: {
+    width: "60%",
+    display: "flex",
+  },
   root: {
     position: "fixed",
     top: 0,
@@ -282,7 +285,7 @@ const useStyles = makeStyles({
   },
   nameErrors: {
     width: "60%",
-    display: "inline-flex",
+    display: "flex",
   },
   firstName: {
     marginRight: "5px",
@@ -296,6 +299,9 @@ const useStyles = makeStyles({
   },
   wrapper: {
     paddingBottom: "30px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
 });
 export default RegisterScreen;

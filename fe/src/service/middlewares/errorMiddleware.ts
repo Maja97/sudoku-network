@@ -1,15 +1,15 @@
 import { showNotification } from "../../redux/notification/notificationRedux";
 import { User } from "../../types/User";
-import { SavedSudokuType, Service, SudokuProps } from "../service";
+import { Service, SudokuProps } from "../service";
 import { AppDispatch } from "../../redux/store";
-import { CellData } from "../../components/SudokuBox";
+import { Sudoku } from "../../types/Sudoku";
 
 class ErrorMiddleware implements Service {
   constructor(private next: Service, private dispatch: AppDispatch) {}
 
   public async login(email: string, password: string): Promise<string> {
     try {
-      return this.next.login(email, password);
+      return await this.next.login(email, password);
     } catch (e) {
       this.dispatch(
         showNotification({
@@ -40,7 +40,7 @@ class ErrorMiddleware implements Service {
 
   public async logout(): Promise<void> {
     try {
-      return this.next.logout();
+      return await this.next.logout();
     } catch (e) {
       throw e;
     }
@@ -48,7 +48,7 @@ class ErrorMiddleware implements Service {
 
   public async checkToken(): Promise<void> {
     try {
-      return this.next.checkToken();
+      return await this.next.checkToken();
     } catch (e) {
       throw e;
     }
@@ -56,7 +56,7 @@ class ErrorMiddleware implements Service {
 
   public async readUserById(userId: number): Promise<User> {
     try {
-      return this.next.readUserById(userId);
+      return await this.next.readUserById(userId);
     } catch (e) {
       throw e;
     }
@@ -64,7 +64,7 @@ class ErrorMiddleware implements Service {
 
   public async refreshToken(token: string): Promise<string> {
     try {
-      return this.next.refreshToken(token);
+      return await this.next.refreshToken(token);
     } catch (e) {
       throw e;
     }
@@ -72,19 +72,34 @@ class ErrorMiddleware implements Service {
 
   public async isUnique(props: SudokuProps): Promise<boolean> {
     try {
-      return this.next.isUnique(props);
+      return await this.next.isUnique(props);
     } catch (e) {
+      console.log(e);
       throw e;
     }
   }
 
-  public async saveSudoku(
-    board: number[][],
-    published: boolean
-  ): Promise<void> {
+  public async saveSudoku(sudoku: Sudoku, published: boolean): Promise<void> {
     try {
-      await this.next.saveSudoku(board, published);
+      await this.next.saveSudoku(sudoku, published);
     } catch (e) {
+      console.log(e.message);
+      this.dispatch(
+        showNotification({
+          message: "Could not save Sudoku",
+          color: "white",
+          backgroundColor: "red",
+        })
+      );
+      throw e;
+    }
+  }
+
+  public async getAllSudoku(): Promise<any> {
+    try {
+      return await this.next.getAllSudoku();
+    } catch (e) {
+      console.log(e);
       throw e;
     }
   }

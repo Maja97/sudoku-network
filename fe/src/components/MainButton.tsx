@@ -3,7 +3,7 @@ import { Button, makeStyles } from "@material-ui/core";
 import fonts from "../constants/fonts";
 import colors from "../constants/colors";
 
-type ButtonType = "primary" | "secondary";
+type ButtonType = "primary" | "secondary" | "noRadius";
 
 interface Props {
   text: string;
@@ -48,6 +48,11 @@ const useStyles = makeStyles({
       backgroundColor: colors.yellow,
       color: colors.darkBlueGrey,
     },
+  },
+  noRadius: {
+    borderRadius: 0,
+    padding: 0,
+    color: colors.darkPurple,
   },
 });
 

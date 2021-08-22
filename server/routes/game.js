@@ -15,13 +15,31 @@ router.post("/isUnique", (req, res) => {
   }
 });
 
-router.post("/saveSudoku", verifyToken, (req, res) => {
-  const { board, published } = req.body;
+router.post("/saveSudoku", verifyToken, async (req, res) => {
+  const { board, published, board_name, board_image, username, type } =
+    req.body;
   try {
-    let results = db.saveSudoku(board, published);
+    let results = await db.saveSudoku(
+      board,
+      published,
+      board_name,
+      board_image,
+      username,
+      type
+    );
     res.json(results[0]);
   } catch (e) {
-    res.status(500).json("Sudoku not saved");
+    console.log(e.message);
+    res.status(500).json({ message: "Sudoku not saved" });
+  }
+});
+
+router.get("/getAll", async (req, res) => {
+  try {
+    let results = await db.getAll();
+    res.json(results);
+  } catch (e) {
+    res.status(500).json("Could not get all Sudokus");
   }
 });
 

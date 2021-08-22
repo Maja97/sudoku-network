@@ -2,7 +2,6 @@ import React from "react";
 import { Box, makeStyles, TextField } from "@material-ui/core";
 import { Controller, useFormContext } from "react-hook-form";
 import colors from "../constants/colors";
-import { SUDOKU_NUMBERS } from "../constants/regex";
 import { checkAllowedValue } from "../helpers/functions";
 import { SudokuTypeProps } from "../constants/sudokuTypes";
 

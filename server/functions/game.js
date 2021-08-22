@@ -4,19 +4,17 @@ export function isUnique(board, count, type, row, col) {
     row = 0;
     if (++col === type.size) return 1 + count;
   }
-
-  if (board[row][col].value !== 0)
-    return isUnique(board, count, type, row + 1, col);
+  if (board[row][col] !== 0) return isUnique(board, count, type, row + 1, col);
 
   const numbers = Array.from({ length: type.size }, (_, i) => i + 1);
 
   for (const number of numbers) {
     if (checkForConstraints(board, row, col, type, number)) {
-      board[row][col].value = number;
+      board[row][col] = number;
       count = isUnique(board, count, type, row + 1, col);
     }
   }
-  board[row][col].value = 0;
+  board[row][col] = 0;
   return count;
 }
 
@@ -35,10 +33,10 @@ export const checkForConstraints = (
 };
 
 export const checkRow = (grid, value, rowIndex) =>
-  grid[rowIndex].every((item) => item.value !== value);
+  grid[rowIndex].every((item) => item !== value);
 
 export const checkColumn = (grid, value, columnIndex) => {
-  return grid.every((item) => item[columnIndex].value !== value);
+  return grid.every((item) => item[columnIndex] !== value);
 };
 
 export const checkBox = (grid, value, row, column, sudokuType) => {
@@ -50,5 +48,5 @@ export const checkBox = (grid, value, row, column, sudokuType) => {
     .map((item) => {
       return item.slice(boxStartColumn, boxStartColumn + sudokuType.boxColumns);
     });
-  return box.every((item) => item.every((x) => x.value !== value));
+  return box.every((item) => item.every((x) => x !== value));
 };

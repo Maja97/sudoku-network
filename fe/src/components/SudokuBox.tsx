@@ -48,9 +48,8 @@ const SudokuBox = ({ data, index, type, checkConstraints }: Props) => {
 
 const useStyles = makeStyles({
   box: {
-    marginLeft: "1px",
-    marginRight: "1px",
-    marginTop: "2px",
+    margin: "1px",
+    backgroundColor: "white",
   },
 });
 

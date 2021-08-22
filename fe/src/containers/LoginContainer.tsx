@@ -3,11 +3,13 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
+import { ACCESS_TOKEN } from "../constants/auth";
 import { onTokenNotFound, TokenData } from "../helpers/auth";
 import { goToHomePage, goToNewSudoku } from "../helpers/navigation";
 import { setUser } from "../redux/auth/authRedux";
 import { RootState } from "../redux/store";
 import LoginScreen from "../screens/LoginScreen";
+import { setHeaders } from "../service/axios";
 import service from "../service/service";
 
 export type LoginData = {
@@ -38,6 +40,8 @@ const LoginContainer = () => {
         const token = await service.login(data.email, data.password);
         const decoded: TokenData = jwtDecode(token);
         const userInfo = await service.readUserById(decoded.userID);
+        const at = localStorage.getItem(ACCESS_TOKEN);
+        if (at) setHeaders(at);
         if (location.state && board)
           goToNewSudoku(history, { board: board.board, type: board.type });
         else goToHomePage(history);

@@ -6,10 +6,11 @@ import SudokuBox, { CellData } from "./SudokuBox";
 interface Props {
   data: CellData[][];
   type: SudokuTypeProps;
+  imageRef: any;
   checkConstraints: (value: string, row: number, column: number) => void;
 }
 
-const SudokuGrid = ({ data, type, checkConstraints }: Props) => {
+const SudokuGrid = ({ data, type, imageRef, checkConstraints }: Props) => {
   const classes = useStyles();
 
   const boxData = React.useMemo(() => {
@@ -27,6 +28,7 @@ const SudokuGrid = ({ data, type, checkConstraints }: Props) => {
       boxData.map((box, index) => {
         return (
           <div
+            style={{ backgroundColor: "black" }}
             className={
               type.breaks.includes(index) ? classes.clear : classes.left
             }
@@ -45,7 +47,7 @@ const SudokuGrid = ({ data, type, checkConstraints }: Props) => {
     [boxData, classes.left, classes.clear, type, checkConstraints]
   );
 
-  return <Box>{rows}</Box>;
+  return <div ref={imageRef}>{rows}</div>;
 };
 
 const useStyles = makeStyles({
