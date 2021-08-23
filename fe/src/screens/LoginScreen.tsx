@@ -8,7 +8,6 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 import MainButton from "../components/MainButton";
-import images from "../constants/images";
 import colors from "../constants/colors";
 import loginImage from "../assets/svgs/login_illustration.svg";
 import { Controller, useFormContext } from "react-hook-form";
@@ -39,7 +38,7 @@ const LoginScreen = ({ handleSubmit }: Props) => {
   }, []);
 
   return (
-    <Box className={classes.root} px={30}>
+    <Box className={classes.root} px={5}>
       <Box className={classes.content} py={2}>
         <Typography
           noWrap
@@ -49,8 +48,8 @@ const LoginScreen = ({ handleSubmit }: Props) => {
         >
           {t(translations.login_title)}
         </Typography>
-        <Grid container>
-          <Grid item md={6} style={{ textAlign: "center" }}>
+        <Grid container spacing={4}>
+          <Grid item md={6} sm={12} style={{ textAlign: "center" }}>
             <div className={classes.emailWrapper}>
               <Controller
                 defaultValue=""
@@ -128,10 +127,7 @@ const useStyles = makeStyles({
   root: {
     position: "fixed",
     top: 0,
-    backgroundImage: `url(${images.yellowBackground})`,
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-    backgroundSize: "cover",
+    backgroundColor: colors.lightYellowOpaque,
     height: "100%",
     width: "100%",
     overflow: "auto",

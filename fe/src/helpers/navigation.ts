@@ -10,15 +10,23 @@ export const goToRegister = (history: History<LocationState>) => {
   history.push(RouteNames.Register);
 };
 
+export const goToStart = (history: History<LocationState>) => {
+  history.push(RouteNames.Start);
+};
+
 export const goToHomePage = (history: History<LocationState>) => {
-  history.replace(RouteNames.Home);
+  history.push(RouteNames.Home);
+};
+
+export const goToMySudoku = (history: History<LocationState>) => {
+  history.push(RouteNames.MySudoku);
 };
 
 export const goToNewSudoku = (
   history: History<LocationState>,
   state?: NewSudokuLocationProps
 ) => {
-  history.replace({
+  history.push({
     pathname: RouteNames.New,
     state: { board: state?.board, type: state?.type },
   });

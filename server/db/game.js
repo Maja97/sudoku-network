@@ -23,4 +23,43 @@ db.getAll = () => {
   });
 };
 
+db.getUserSudokus = (username) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "SELECT * FROM games WHERE username = ?",
+      [username],
+      (error, result) => {
+        if (error) return reject(error);
+        return resolve(result);
+      }
+    );
+  });
+};
+
+db.publishSudoku = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "UPDATE games SET published = 1 WHERE board_id = ?",
+      [id],
+      (error, result) => {
+        if (error) return reject(error);
+        return resolve(result);
+      }
+    );
+  });
+};
+
+db.getSudoku = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "SELECT * FROM games WHERE board_id = ?",
+      [id],
+      (error, result) => {
+        if (error) return reject(error);
+        return resolve(result);
+      }
+    );
+  });
+};
+
 export default db;

@@ -11,6 +11,8 @@ import HomeContainer from "../containers/HomeContainer";
 import RegisterContainer from "../containers/RegisterContainer";
 import { RouteNames } from "./routes";
 import NewSudokuContainer from "../containers/NewSudokuContainer";
+import UserSudokuContainer from "../containers/UserSudokuContainer";
+import SolveContainer from "../containers/SolveContainer";
 
 const MainRouter = () => {
   return (
@@ -30,6 +32,12 @@ const MainRouter = () => {
         </Route>
         <Route strict={true} exact={true} path={RouteNames.New}>
           <NewSudokuContainer />
+        </Route>
+        <Route strict={true} exact={true} path={RouteNames.MySudoku}>
+          <UserSudokuContainer />
+        </Route>
+        <Route strict={true} exact={true} path={RouteNames.Solve}>
+          <SolveContainer />
         </Route>
         <Redirect to={RouteNames.Start} />
       </Switch>

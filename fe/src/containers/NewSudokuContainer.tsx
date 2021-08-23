@@ -1,7 +1,6 @@
 import React from "react";
 import NewSudokuScreen from "../screens/NewSudokuScreen";
 import { sudokuType, SudokuTypeProps } from "../constants/sudokuTypes";
-import { checkForConstraints } from "../helpers/sudokuConstraints";
 import { CellData } from "../components/SudokuBox";
 import { FormProvider, useForm } from "react-hook-form";
 import { generateEmptyGrid } from "../helpers/game";
@@ -15,6 +14,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import { setBoard } from "../redux/board/boardRedux";
 import { toBlob } from "html-to-image";
 import { Sudoku } from "../types/Sudoku";
+import { ModalRef } from "../components/CustomModal";
+import { onValueEnter } from "../helpers/functions";
 
 export type SudokuData = {
   name: string;
@@ -37,6 +38,7 @@ const NewSudokuContainer = () => {
   const [data, setData] = React.useState<CellData[][]>([]);
   const [unique, setUnique] = React.useState<boolean>(false);
   const ref = React.useRef<HTMLDivElement>(null);
+  const modalRef = React.useRef<ModalRef>();
 
   const dispatch = useDispatch<AppDispatch>();
   const history = useHistory();
@@ -76,7 +78,6 @@ const NewSudokuContainer = () => {
           setUnique(res);
         })
         .catch((e) => {
-          console.log(e);
           dispatch(
             showNotification({
               message: "An error occured, try again",
@@ -116,22 +117,8 @@ const NewSudokuContainer = () => {
     (value: string, row: number, column: number) => {
       setUnique(false);
       const copy = data.map((a) => a.map((item: any) => ({ ...item })));
-      let val;
-      Boolean(value) ? (val = parseInt(value)) : (val = 0);
-      copy[row][column].value = val;
-
-      copy.forEach((row, rowIndex) =>
-        row.forEach((item, columnIndex) => {
-          if (!item.value) copy[rowIndex][columnIndex].error = false;
-          if (
-            item.value &&
-            !checkForConstraints(copy, rowIndex, columnIndex, type, item.value)
-          )
-            copy[rowIndex][columnIndex].error = true;
-          else copy[rowIndex][columnIndex].error = false;
-        })
-      );
-      setData(copy);
+      const board = onValueEnter(copy, row, column, value, type);
+      setData(board);
     },
     [type, data]
   );
@@ -148,18 +135,20 @@ const NewSudokuContainer = () => {
               reader.readAsDataURL(item);
               reader.onloadend = () => {
                 if (reader.result) binaryData = reader.result;
-                console.log(reader.result ? reader.result : "");
                 const sudoku: Sudoku = {
                   type: type.identifier,
                   board: board,
                   boardImage: binaryData,
                   username: user ? user.username : null,
                   boardName: fieldData.name,
+                  published: fieldData.publish ? 1 : 0,
                 };
                 service
-                  .saveSudoku(sudoku, fieldData.publish)
+                  .saveSudoku(sudoku)
                   .then((res) => console.log(res, "success"))
-                  .catch((err) => console.log(err));
+                  .catch((err) => {
+                    if (modalRef.current) modalRef.current.closeDialog();
+                  });
               };
             }
           })
@@ -182,6 +171,7 @@ const NewSudokuContainer = () => {
         unique={unique}
         user={user}
         imageRef={ref}
+        modalRef={modalRef}
         onTypeChange={onTypeChange}
         onCheckUnique={onCheckUnique}
         checkConstraints={checkConstraints}

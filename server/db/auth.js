@@ -1,7 +1,7 @@
 import pool from "./index.js";
 let db = {};
 
-db.register = (email, password, username, first_name, last_name, phone) => {
+db.register = (email, password, username, first_name, last_name) => {
   return new Promise((resolve, reject) => {
     pool.query(
       "SELECT * FROM users WHERE username = ? OR email = ?",
@@ -11,8 +11,8 @@ db.register = (email, password, username, first_name, last_name, phone) => {
           return reject(err);
         } else {
           pool.query(
-            "INSERT INTO users (email, password, username, first_name, last_name, phone) VALUES (?,?,?,?,?,?)",
-            [email, password, username, first_name, last_name, phone],
+            "INSERT INTO users (email, password, username, first_name, last_name) VALUES (?,?,?,?,?)",
+            [email, password, username, first_name, last_name],
             (error, result) => {
               if (error) return reject(error);
               return resolve(result);

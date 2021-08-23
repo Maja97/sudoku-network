@@ -1,19 +1,10 @@
 import React from "react";
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  Grid,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { Box, Grid, makeStyles, Typography } from "@material-ui/core";
 import { Sudoku } from "../types/Sudoku";
 import MainButton from "../components/MainButton";
-import fonts from "../constants/fonts";
-import colors from "../constants/colors";
 import Navbar from "../components/Navbar";
 import ExploreImage from "../assets/svgs/explore_illustration.svg";
+import SudokuCard from "../components/SudokuCard";
 
 interface Props {
   sudoku: Sudoku[];
@@ -44,33 +35,11 @@ const HomeScreen = ({ sudoku, onGoToNewSudoku }: Props) => {
               onClick={onGoToNewSudoku}
             />
           </Grid>
-          {sudoku.map((item) => {
+          {sudoku.map((item, index) => {
             const source = item.boardImage.toString("base64");
             return (
-              <Grid item md={3} sm={4}>
-                <Card>
-                  <CardContent>
-                    <Box className={classes.sudokuInfo}>
-                      <Typography className={classes.sudokuName}>
-                        {`#${item.boardId}`}
-                      </Typography>
-                      <Typography className={classes.sudokuNameTitle}>
-                        Sudoku name:
-                      </Typography>
-                      <Typography className={classes.sudokuName}>
-                        {item.boardName ? item.boardName : `-`}
-                      </Typography>
-                    </Box>
-                    <img className={classes.sudokuImage} src={source} alt="" />
-                  </CardContent>
-                  <CardActions className={classes.button}>
-                    <MainButton
-                      text="Solve"
-                      type="noRadius"
-                      onClick={() => console.log(item.boardId)}
-                    />
-                  </CardActions>
-                </Card>
+              <Grid item md={3} sm={4} key={`sudoku-card-home-${index}`}>
+                <SudokuCard sudoku={item} image={source} />
               </Grid>
             );
           })}
@@ -83,22 +52,6 @@ const HomeScreen = ({ sudoku, onGoToNewSudoku }: Props) => {
 const useStyles = makeStyles({
   exploreImage: {
     width: "100%",
-  },
-  sudokuImage: {
-    width: "-webkit-fill-available",
-  },
-  sudokuInfo: {
-    paddingBottom: 15,
-  },
-  sudokuName: {
-    fontSize: 14,
-    fontFamily: fonts.light,
-  },
-  sudokuNameTitle: {
-    color: colors.darkPurple,
-  },
-  button: {
-    justifyContent: "flex-end",
   },
 });
 

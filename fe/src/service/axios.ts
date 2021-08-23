@@ -35,8 +35,8 @@ AxiosInstance.interceptors.response.use(
 
 export const setHeaders = (token: string) => {
   AxiosInstance.interceptors.request.use((config) => {
-    if (token !== "") config.headers.authorization = "Bearer " + token;
-    else delete config.headers.authorization;
+    if (token !== "") config.headers.Authorization = "Bearer " + token;
+    else delete config.headers.Authorization;
     return config;
   });
 };

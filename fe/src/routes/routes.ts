@@ -4,6 +4,8 @@ enum Routes {
   Home = "/dashboard",
   Register = "/register",
   NewSudoku = "/new",
+  MySudoku = "/my-sudoku",
+  Solve = "/sudoku/:id",
 }
 
 export const RouteNames = {
@@ -12,4 +14,6 @@ export const RouteNames = {
   Home: Routes.Home,
   Register: Routes.Register,
   New: Routes.NewSudoku,
+  MySudoku: Routes.MySudoku,
+  Solve: Routes.Solve,
 };

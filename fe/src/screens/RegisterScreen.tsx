@@ -8,7 +8,6 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 import MainButton from "../components/MainButton";
-import images from "../constants/images";
 import colors from "../constants/colors";
 import registerImage from "../assets/svgs/register_hello_illustration.svg";
 import { Controller, useFormContext } from "react-hook-form";
@@ -22,7 +21,6 @@ import { registerRules } from "../helpers/rules";
 import ErrorIcon from "@material-ui/icons/Error";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { registerFields } from "../containers/RegisterContainer";
-import PhoneIcon from "@material-ui/icons/Phone";
 
 interface Props {
   handleSubmit: () => void;
@@ -41,7 +39,7 @@ const RegisterScreen = ({ handleSubmit }: Props) => {
   }, []);
 
   return (
-    <Box className={classes.root} px={30}>
+    <Box className={classes.root} px={5}>
       <Box className={classes.content} py={2}>
         <Typography
           noWrap
@@ -54,43 +52,42 @@ const RegisterScreen = ({ handleSubmit }: Props) => {
         <Grid container>
           <Grid item md={6} style={{ textAlign: "center" }}>
             <div className={classes.firstNameWrapper}>
-              <Controller
-                defaultValue=""
-                name={registerFields.firstName}
-                rules={registerRules.rules(t).firstName}
-                render={({ field: { value, onChange } }) => (
-                  <LocalTextField
-                    name={registerFields.firstName}
-                    onChange={onChange}
-                    value={value}
-                    className={classes.firstName}
-                    label="First name"
-                  />
-                )}
-              />
-
-              <Controller
-                defaultValue=""
-                name={registerFields.lastName}
-                rules={registerRules.rules(t).lastName}
-                render={({ field: { value, onChange } }) => (
-                  <LocalTextField
-                    name={registerFields.lastName}
-                    onChange={onChange}
-                    value={value}
-                    label="Last name"
-                  />
-                )}
-              />
-            </div>
-            {(errors.firstName || errors.lastName) && (
-              <div className={classes.nameErrors}>
+              <div>
+                <Controller
+                  defaultValue=""
+                  name={registerFields.firstName}
+                  rules={registerRules.rules(t).firstName}
+                  render={({ field: { value, onChange } }) => (
+                    <LocalTextField
+                      name={registerFields.firstName}
+                      onChange={onChange}
+                      value={value}
+                      className={classes.firstName}
+                      label="First name"
+                    />
+                  )}
+                />
                 {errors.firstName && (
                   <FormHelperText className={classes.error} error>
                     <ErrorIcon type="secondary" />
                     <span>{errors.firstName?.message}</span>
                   </FormHelperText>
                 )}
+              </div>
+              <div>
+                <Controller
+                  defaultValue=""
+                  name={registerFields.lastName}
+                  rules={registerRules.rules(t).lastName}
+                  render={({ field: { value, onChange } }) => (
+                    <LocalTextField
+                      name={registerFields.lastName}
+                      onChange={onChange}
+                      value={value}
+                      label="Last name"
+                    />
+                  )}
+                />
                 {errors.lastName && (
                   <FormHelperText className={classes.error} error>
                     <ErrorIcon type="secondary" />
@@ -98,7 +95,7 @@ const RegisterScreen = ({ handleSubmit }: Props) => {
                   </FormHelperText>
                 )}
               </div>
-            )}
+            </div>
 
             <div className={classes.wrapper}>
               <Controller
@@ -218,22 +215,7 @@ const RegisterScreen = ({ handleSubmit }: Props) => {
                 </FormHelperText>
               )}
             </div>
-            <div className={classes.wrapper}>
-              <Controller
-                defaultValue=""
-                name={registerFields.phone}
-                render={({ field: { value, onChange } }) => (
-                  <LocalTextField
-                    name={registerFields.phone}
-                    onChange={onChange}
-                    value={value}
-                    className={classes.textfield}
-                    label="Phone number"
-                    endAdornment={<PhoneIcon />}
-                  />
-                )}
-              />
-            </div>
+
             <MainButton text="Register" type="primary" onClick={handleSubmit} />
           </Grid>
           <Grid item md={6}>
@@ -249,14 +231,12 @@ const useStyles = makeStyles({
   error: {
     width: "60%",
     display: "flex",
+    alignItems: "center",
   },
   root: {
     position: "fixed",
     top: 0,
-    backgroundImage: `url(${images.yellowBackground})`,
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-    backgroundSize: "cover",
+    backgroundColor: colors.lightYellowOpaque,
     height: "100%",
     width: "100%",
     overflow: "auto",
@@ -264,7 +244,7 @@ const useStyles = makeStyles({
   },
   title: {
     color: colors.darkBlueGrey,
-    paddingBottom: "60px",
+    paddingBottom: "40px",
     paddingTop: "20px",
   },
   content: {
@@ -282,10 +262,6 @@ const useStyles = makeStyles({
     paddingTop: "50px",
     display: "inline-flex",
     paddingBottom: "30px",
-  },
-  nameErrors: {
-    width: "60%",
-    display: "flex",
   },
   firstName: {
     marginRight: "5px",

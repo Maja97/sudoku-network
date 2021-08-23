@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { isUnique } from "../functions/game.js";
 import db from "../db/game.js";
+import userDb from "../db/users.js";
 import { verifyToken } from "../functions/auth.js";
 
 const router = Router();
@@ -29,17 +30,54 @@ router.post("/saveSudoku", verifyToken, async (req, res) => {
     );
     res.json(results[0]);
   } catch (e) {
-    console.log(e.message);
     res.status(500).json({ message: "Sudoku not saved" });
   }
 });
 
 router.get("/getAll", async (req, res) => {
   try {
-    let results = await db.getAll();
+    const results = await db.getAll();
     res.json(results);
   } catch (e) {
     res.status(500).json("Could not get all Sudokus");
+  }
+});
+
+router.post("/getUserSudokus", async (req, res) => {
+  try {
+    /*  const userId = res.locals.userId;
+    const user = await userDb.one(userId); */
+    const username = req.body.username;
+    // const currentUser = user[0].username;
+
+    /*  if (username !== currentUser) {
+      throw Error("Could not get user page");
+    } */
+    const results = await db.getUserSudokus(username);
+    res.json(results);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json("Could not get user Sudokus");
+  }
+});
+
+router.post("/publishSudoku", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const results = await db.publishSudoku(id);
+    res.json(results[0]);
+  } catch (e) {
+    res.status(500).json({ message: "Sudoku not published" });
+  }
+});
+
+router.post("/getSudokuById", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const results = await db.getSudoku(id);
+    res.json(results[0]);
+  } catch (e) {
+    res.status(500).json({ message: "Sudoku not found" });
   }
 });
 

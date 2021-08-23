@@ -10,6 +10,7 @@ export interface TokenData {
 
 export const onTokenSuccess = (token: string) => {
   localStorage.setItem(ACCESS_TOKEN, token);
+  console.log(token, "on token success");
   setHeaders(token);
 };
 

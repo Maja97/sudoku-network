@@ -11,7 +11,7 @@ import {
   InputLabel,
 } from "@material-ui/core";
 import { CheckCircleOutline, RadioButtonUnchecked } from "@material-ui/icons";
-import React from "react";
+import React, { MutableRefObject } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import CustomModal, { ModalRef } from "../components/CustomModal";
@@ -34,6 +34,7 @@ interface Props {
   unique: boolean;
   imageRef: any;
   user: User | undefined;
+  modalRef: MutableRefObject<ModalRef | undefined>;
   onTypeChange: (event: React.ChangeEvent<{ value: unknown }>) => void;
   onCheckUnique: () => void;
   checkConstraints: (value: string, row: number, column: number) => void;
@@ -48,6 +49,7 @@ const NewSudokuScreen = ({
   unique,
   user,
   imageRef,
+  modalRef,
   onTypeChange,
   onCheckUnique,
   checkConstraints,
@@ -56,14 +58,13 @@ const NewSudokuScreen = ({
 }: Props) => {
   const { t } = useTranslation();
   const classes = useStyles();
-  const modalRef = React.useRef<ModalRef>();
   const {
     formState: { errors },
   } = useFormContext();
 
   const onSaveSudokuButtonPress = React.useCallback(() => {
     modalRef.current?.openDialog();
-  }, []);
+  }, [modalRef]);
 
   const modalContent = React.useMemo(
     () =>

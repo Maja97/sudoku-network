@@ -6,6 +6,7 @@ import { AppDispatch } from "../../redux/store";
 import { removeUser, setUser } from "../../redux/auth/authRedux";
 import { User, userFromJSON, userToJSON } from "../../types/User";
 import { Sudoku, sudokuFromJSON, sudokuToJSON } from "../../types/Sudoku";
+import { setHeaders } from "../axios";
 
 class Client implements Service {
   constructor(
@@ -36,10 +37,11 @@ class Client implements Service {
   }
 
   public async logout(): Promise<void> {
-    await this.clientInstances.auth.post("logout", {});
     localStorage.removeItem(ACCESS_TOKEN);
     localStorage.removeItem(REFRESH_TOKEN);
     this.dispatch(removeUser());
+    setHeaders("");
+    await this.clientInstances.auth.post("logout", {});
   }
 
   public async checkToken(): Promise<void> {
@@ -82,16 +84,31 @@ class Client implements Service {
     return res;
   }
 
-  public async saveSudoku(sudoku: Sudoku, published: boolean): Promise<void> {
+  public async saveSudoku(sudoku: Sudoku): Promise<void> {
     await this.clientInstances.game.post("saveSudoku", {
       ...sudokuToJSON(sudoku),
-      published: published,
     });
   }
 
-  public async getAllSudoku(): Promise<any> {
+  public async getAllSudoku(): Promise<Sudoku[]> {
     const res = await this.clientInstances.game.get("getAll", {});
     return res.map((board: any) => sudokuFromJSON(board));
+  }
+
+  public async getUserSudokus(username: string): Promise<Sudoku[]> {
+    const res = await this.clientInstances.game.post("getUserSudokus", {
+      username,
+    });
+    return res.map((board: any) => sudokuFromJSON(board));
+  }
+
+  public async publishSudoku(id: number): Promise<void> {
+    await this.clientInstances.game.post("publishSudoku", { id });
+  }
+
+  public async getSudokuById(id: number): Promise<Sudoku> {
+    const res = await this.clientInstances.game.post("getSudokuById", { id });
+    return sudokuFromJSON(res);
   }
 }
 

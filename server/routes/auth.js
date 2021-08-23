@@ -12,14 +12,14 @@ dotenv.config();
 const router = Router();
 
 router.post("/register", registerRules, async (req, res) => {
-  const { email, password, username, first_name, last_name, phone } = req.body;
+  const { email, password, username, first_name, last_name } = req.body;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    await db.register(email, password, username, first_name, last_name, phone);
+    await db.register(email, password, username, first_name, last_name);
     res.status(200).json("Register successful");
   } catch (e) {
     res.status(500).json("Register failed");
@@ -73,6 +73,7 @@ router.post("/logout", (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     const decoded = jwtDecode(token);
+    console.log(decoded);
     redisClient.del(decoded.userID.toString());
     res.sendStatus(200);
   } catch (e) {

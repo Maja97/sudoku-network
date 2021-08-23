@@ -16,7 +16,6 @@ export type RegisterData = {
   username: string;
   firstName: string;
   lastName: string;
-  phone?: string;
 };
 
 export const registerFields = {
@@ -25,7 +24,6 @@ export const registerFields = {
   username: "username",
   firstName: "firstName",
   lastName: "lastName",
-  phone: "phone",
 };
 
 const RegisterContainer = () => {
@@ -46,7 +44,6 @@ const RegisterContainer = () => {
           username: data.username,
           firstName: data.firstName,
           lastName: data.lastName,
-          phone: data.phone,
         };
         await service
           .register(user, data.password)

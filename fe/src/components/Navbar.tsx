@@ -14,7 +14,13 @@ import colors from "../constants/colors";
 import fonts from "../constants/fonts";
 import { RootState } from "../redux/store";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
-import { goToHomePage, goToLogin, goToRegister } from "../helpers/navigation";
+import {
+  goToHomePage,
+  goToLogin,
+  goToMySudoku,
+  goToRegister,
+  goToStart,
+} from "../helpers/navigation";
 import { useHistory } from "react-router-dom";
 import service from "../service/service";
 import { removeUser } from "../redux/auth/authRedux";
@@ -52,7 +58,7 @@ const Navbar = ({ pageName }: Props) => {
     await service.logout().catch((e) => console.log(e));
     localStorage.removeItem(ACCESS_TOKEN);
     localStorage.removeItem(REFRESH_TOKEN);
-    goToLogin(history);
+    goToStart(history);
   }, [history, dispatch]);
 
   const onGoToLogin = React.useCallback(() => {
@@ -61,6 +67,10 @@ const Navbar = ({ pageName }: Props) => {
 
   const onGoToRegister = React.useCallback(() => {
     goToRegister(history);
+  }, [history]);
+
+  const onGoToMySudoku = React.useCallback(() => {
+    goToMySudoku(history);
   }, [history]);
 
   return (
@@ -95,9 +105,7 @@ const Navbar = ({ pageName }: Props) => {
               open={Boolean(anchorEl)}
               onClose={onMenuClose}
             >
-              <MenuItem onClick={() => console.log("my sudokus")}>
-                My Sudoku
-              </MenuItem>
+              <MenuItem onClick={onGoToMySudoku}>My Sudoku</MenuItem>
               <MenuItem onClick={() => console.log("accoutn")}>
                 Account
               </MenuItem>

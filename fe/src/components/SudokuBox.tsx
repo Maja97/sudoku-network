@@ -32,6 +32,7 @@ const SudokuBox = ({ data, index, type, checkConstraints }: Props) => {
               key={`${index}-${boxRow}-${boxCol}`}
               name={`${type.name}[${index}-${boxRow}-${boxCol}]`}
               checkConstraints={(value) => {
+                console.log("box");
                 const row =
                   Math.floor(index / type.boxRows) * type.boxRows + boxRow;
                 const column =

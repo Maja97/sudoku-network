@@ -5,6 +5,7 @@ export interface Sudoku {
   username: string | null;
   boardName?: string;
   boardImage: any;
+  published: number;
 }
 
 export function sudokuFromJSON(maybe: any): Sudoku {
@@ -13,6 +14,8 @@ export function sudokuFromJSON(maybe: any): Sudoku {
     throw Error("board id must be a number");
   if (typeof maybe.board_type !== "string")
     throw Error("board type must be string");
+  if (typeof maybe.published !== "number")
+    throw Error("published must be a number");
 
   return {
     board: JSON.parse(maybe.board),
@@ -21,6 +24,7 @@ export function sudokuFromJSON(maybe: any): Sudoku {
     username: maybe.username,
     boardImage: maybe.board_image,
     boardName: maybe.board_name,
+    published: maybe.published,
   };
 }
 
@@ -31,5 +35,6 @@ export function sudokuToJSON(sudoku: Sudoku) {
     username: sudoku.username,
     board_image: sudoku.boardImage,
     board_name: sudoku.boardName,
+    published: sudoku.published,
   };
 }

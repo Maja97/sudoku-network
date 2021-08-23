@@ -16,7 +16,7 @@ interface Props {
 const StartScreen = ({ goToLogin }: Props) => {
   const classes = useStyles();
   return (
-    <Box className={classes.root} px={30}>
+    <Box className={classes.root} px={5}>
       <Box className={classes.content} paddingBottom={3} py={2}>
         <Typography
           noWrap

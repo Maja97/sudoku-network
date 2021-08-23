@@ -3,7 +3,6 @@ export interface User {
   firstName: string;
   lastName: string;
   username: string;
-  phone?: string;
 }
 
 export function userFromJSON(maybe: any): User {
@@ -21,7 +20,6 @@ export function userFromJSON(maybe: any): User {
     firstName: maybe.first_name,
     lastName: maybe.last_name,
     username: maybe.username,
-    phone: maybe.phone,
   };
 }
 
@@ -31,6 +29,5 @@ export function userToJSON(user: User) {
     first_name: user.firstName,
     last_name: user.lastName,
     username: user.username,
-    phone: user.phone,
   };
 }

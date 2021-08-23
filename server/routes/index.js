@@ -11,9 +11,9 @@ const routesIndex = (app) => {
     res.setHeader("Access-Control-Allow-Headers", "Authorization");
     next();
   });
-  app.use("/users", usersRouter);
-  app.use("/auth", authRouter);
-  app.use("/game", gameRouter);
+  app.use("*/users", usersRouter);
+  app.use("*/auth", authRouter);
+  app.use("*/game", gameRouter);
 };
 
 export default routesIndex;

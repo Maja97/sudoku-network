@@ -1,4 +1,4 @@
-import { Box, makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import React from "react";
 import { SudokuTypeProps } from "../constants/sudokuTypes";
 import SudokuBox, { CellData } from "./SudokuBox";
@@ -6,7 +6,7 @@ import SudokuBox, { CellData } from "./SudokuBox";
 interface Props {
   data: CellData[][];
   type: SudokuTypeProps;
-  imageRef: any;
+  imageRef?: any;
   checkConstraints: (value: string, row: number, column: number) => void;
 }
 

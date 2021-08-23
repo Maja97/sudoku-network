@@ -4,6 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import colors from "../constants/colors";
 import { checkAllowedValue } from "../helpers/functions";
 import { SudokuTypeProps } from "../constants/sudokuTypes";
+import { BACKSPACE } from "../constants/consts";
 
 interface Props {
   disabled: boolean;
@@ -43,22 +44,19 @@ const SudokuCell = ({
               classes: {
                 input: classes.text,
                 focused: classes.focused,
+                disabled: classes.disabled,
               },
-            }}
-            onChange={(
-              e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-            ) => {
-              e.preventDefault();
-              onChange(e);
-              const value = e.target.value;
-              if (checkAllowedValue(value, type) || value === "")
-                checkConstraints(value);
-              e.target.select();
             }}
             onFocus={(e) => {
               e.target.select();
             }}
-            // onKeyDown={(e) => console.log(e.nativeEvent.key)}
+            onKeyDown={(e) => {
+              onChange(e);
+              let value = e.nativeEvent.key;
+              if (value === BACKSPACE) value = "";
+              if (checkAllowedValue(value, type) || value === "")
+                checkConstraints(value);
+            }}
             className={classes.input}
           />
         )}
@@ -99,6 +97,9 @@ const useStyles = makeStyles({
   }),
   focused: {
     backgroundColor: colors.lightBlue,
+  },
+  disabled: {
+    backgroundColor: colors.lightestGrey,
   },
 });
 

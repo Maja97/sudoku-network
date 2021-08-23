@@ -79,10 +79,10 @@ class LoadingMiddleware implements Service {
     }
   }
 
-  public async saveSudoku(sudoku: Sudoku, published: boolean): Promise<void> {
+  public async saveSudoku(sudoku: Sudoku): Promise<void> {
     try {
       this.dispatch(startLoading(loadingKeys.SAVE_SUDOKU));
-      await this.next.saveSudoku(sudoku, published);
+      await this.next.saveSudoku(sudoku);
       this.dispatch(stopLoading(loadingKeys.SAVE_SUDOKU));
     } catch (e) {
       this.dispatch(stopLoading(loadingKeys.SAVE_SUDOKU));
@@ -98,6 +98,41 @@ class LoadingMiddleware implements Service {
       return res;
     } catch (e) {
       this.dispatch(stopLoading(loadingKeys.GET_ALL_SUDOKU));
+      throw e;
+    }
+  }
+
+  public async getUserSudokus(username: string): Promise<Sudoku[]> {
+    try {
+      this.dispatch(startLoading(loadingKeys.GET_USER_SUDOKU));
+      const res = await this.next.getUserSudokus(username);
+      this.dispatch(stopLoading(loadingKeys.GET_USER_SUDOKU));
+      return res;
+    } catch (e) {
+      this.dispatch(stopLoading(loadingKeys.GET_USER_SUDOKU));
+      throw e;
+    }
+  }
+
+  public async publishSudoku(id: number): Promise<void> {
+    try {
+      this.dispatch(startLoading(loadingKeys.PUBLISH_SUDOKU));
+      await this.next.publishSudoku(id);
+      this.dispatch(stopLoading(loadingKeys.PUBLISH_SUDOKU));
+    } catch (e) {
+      this.dispatch(stopLoading(loadingKeys.PUBLISH_SUDOKU));
+      throw e;
+    }
+  }
+
+  public async getSudokuById(id: number): Promise<Sudoku> {
+    try {
+      this.dispatch(startLoading(loadingKeys.GET_SUDOKU_BY_ID));
+      const res = await this.next.getSudokuById(id);
+      this.dispatch(stopLoading(loadingKeys.GET_SUDOKU_BY_ID));
+      return res;
+    } catch (e) {
+      this.dispatch(stopLoading(loadingKeys.GET_SUDOKU_BY_ID));
       throw e;
     }
   }

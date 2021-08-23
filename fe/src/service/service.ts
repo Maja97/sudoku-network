@@ -30,8 +30,11 @@ interface UsersService {
 
 interface GameService {
   isUnique(props: SudokuProps): Promise<boolean>;
-  saveSudoku(sudoku: Sudoku, published: boolean): Promise<void>;
-  getAllSudoku(): Promise<any>;
+  saveSudoku(sudoku: Sudoku): Promise<void>;
+  getAllSudoku(): Promise<Sudoku[]>;
+  getUserSudokus(username: string): Promise<Sudoku[]>;
+  getSudokuById(id: number): Promise<Sudoku>;
+  publishSudoku(id: number): Promise<void>;
 }
 
 export const services = ["auth", "users", "game"];

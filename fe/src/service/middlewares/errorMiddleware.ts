@@ -13,9 +13,9 @@ class ErrorMiddleware implements Service {
     } catch (e) {
       this.dispatch(
         showNotification({
-          message: "abc",
-          color: "red",
-          backgroundColor: "blue",
+          message: "Login failed, try again",
+          color: "white",
+          backgroundColor: "red",
         })
       );
       throw e;
@@ -79,9 +79,9 @@ class ErrorMiddleware implements Service {
     }
   }
 
-  public async saveSudoku(sudoku: Sudoku, published: boolean): Promise<void> {
+  public async saveSudoku(sudoku: Sudoku): Promise<void> {
     try {
-      await this.next.saveSudoku(sudoku, published);
+      await this.next.saveSudoku(sudoku);
     } catch (e) {
       console.log(e.message);
       this.dispatch(
@@ -95,9 +95,35 @@ class ErrorMiddleware implements Service {
     }
   }
 
-  public async getAllSudoku(): Promise<any> {
+  public async getAllSudoku(): Promise<Sudoku[]> {
     try {
       return await this.next.getAllSudoku();
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  }
+
+  public async getUserSudokus(username: string): Promise<Sudoku[]> {
+    try {
+      return await this.next.getUserSudokus(username);
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  }
+
+  public async publishSudoku(id: number): Promise<void> {
+    try {
+      await this.next.publishSudoku(id);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async getSudokuById(id: number): Promise<Sudoku> {
+    try {
+      return await this.next.getSudokuById(id);
     } catch (e) {
       console.log(e);
       throw e;

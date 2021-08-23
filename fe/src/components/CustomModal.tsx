@@ -14,6 +14,7 @@ import colors from "../constants/colors";
 
 export interface ModalRef {
   openDialog: () => void;
+  closeDialog: () => void;
 }
 
 interface Props {
@@ -23,12 +24,14 @@ interface Props {
   acceptButtonAction: () => void;
 }
 
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & { children?: React.ReactElement<any, any> },
-  ref: React.Ref<unknown>
-) {
-  return <Zoom in={true} ref={ref} {...props} />;
-});
+export const ZoomTransition = React.forwardRef(
+  (
+    props: TransitionProps & { children?: React.ReactElement<any, any> },
+    ref: React.Ref<unknown>
+  ) => {
+    return <Zoom in={true} ref={ref} {...props} />;
+  }
+);
 
 const CustomModal = (
   { title, content, acceptButtonText, acceptButtonAction }: Props,
@@ -43,10 +46,10 @@ const CustomModal = (
 
   const closeDialog = React.useCallback(() => setOpen(false), []);
 
-  React.useImperativeHandle(ref, (): ModalRef => ({ openDialog }));
+  React.useImperativeHandle(ref, (): ModalRef => ({ openDialog, closeDialog }));
 
   return (
-    <Dialog open={open} TransitionComponent={Transition}>
+    <Dialog open={open} TransitionComponent={ZoomTransition}>
       <DialogTitle>
         <Typography classes={{ root: classes.title }}>{title}</Typography>
       </DialogTitle>

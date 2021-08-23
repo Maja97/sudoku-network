@@ -17,7 +17,7 @@ const HomeContainer = () => {
       .getAllSudoku()
       .then((res) => setSudoku(res))
       .catch((e) => console.log(e));
-  }, []);
+  }, [user]);
 
   const navigateToNewSudoku = React.useCallback(
     () => goToNewSudoku(history),
