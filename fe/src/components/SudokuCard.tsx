@@ -18,9 +18,16 @@ interface Props {
   image: string;
   user?: User;
   onSudokuPublish?: (id: number | undefined) => void;
+  onGoSolveSudoku: (id: number | undefined) => void;
 }
 
-const SudokuCard = ({ sudoku, image, user, onSudokuPublish }: Props) => {
+const SudokuCard = ({
+  sudoku,
+  image,
+  user,
+  onSudokuPublish,
+  onGoSolveSudoku,
+}: Props) => {
   const classes = useStyles();
   return (
     <Card>
@@ -49,7 +56,7 @@ const SudokuCard = ({ sudoku, image, user, onSudokuPublish }: Props) => {
         <MainButton
           text="Solve"
           type="noRadius"
-          onClick={() => console.log(sudoku.boardId)}
+          onClick={() => onGoSolveSudoku(sudoku.boardId)}
         />
       </CardActions>
     </Card>

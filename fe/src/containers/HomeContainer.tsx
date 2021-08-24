@@ -4,7 +4,7 @@ import { RootState } from "../redux/store";
 import HomeScreen from "../screens/HomeScreen";
 import service from "../service/service";
 import { Sudoku } from "../types/Sudoku";
-import { goToNewSudoku } from "../helpers/navigation";
+import { goToNewSudoku, goToSingleSudoku } from "../helpers/navigation";
 import { useHistory } from "react-router-dom";
 
 const HomeContainer = () => {
@@ -24,7 +24,20 @@ const HomeContainer = () => {
     [history]
   );
 
-  return <HomeScreen sudoku={sudoku} onGoToNewSudoku={navigateToNewSudoku} />;
+  const navigateToSingleSudoku = React.useCallback(
+    (id: number | undefined) => {
+      if (id) goToSingleSudoku(history, id);
+    },
+    [history]
+  );
+
+  return (
+    <HomeScreen
+      sudoku={sudoku}
+      onGoToNewSudoku={navigateToNewSudoku}
+      onGoSolveSudoku={navigateToSingleSudoku}
+    />
+  );
 };
 
 export default HomeContainer;

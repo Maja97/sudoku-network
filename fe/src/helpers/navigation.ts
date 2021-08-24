@@ -31,3 +31,10 @@ export const goToNewSudoku = (
     state: { board: state?.board, type: state?.type },
   });
 };
+
+export const goToSingleSudoku = (
+  history: History<LocationState>,
+  id: number
+) => {
+  history.push(`${RouteNames.Sudoku}/${id}`);
+};

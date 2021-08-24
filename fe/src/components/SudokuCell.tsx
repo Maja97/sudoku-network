@@ -12,7 +12,10 @@ interface Props {
   cellError: boolean;
   name: string;
   cellKey: string;
+  cellIndex: number;
   type: SudokuTypeProps;
+  focused: any;
+  setFocused: (cellIndex: number, key?: string) => void;
   checkConstraints: (value: string) => void;
 }
 
@@ -22,11 +25,30 @@ const SudokuCell = ({
   cellError,
   cellValue,
   cellKey,
+  cellIndex,
   type,
+  focused,
+  setFocused,
   checkConstraints,
 }: Props) => {
   const classes = useStyles({ error: cellError });
   const { control } = useFormContext();
+
+  const onKeyDown = React.useCallback(
+    (e) => {
+      let value = e.nativeEvent.key;
+      if (Object.values(Arrows).includes(value)) {
+        setFocused(cellIndex, value);
+      } else {
+        if (!disabled) {
+          if (value === BACKSPACE) value = "";
+          if (checkAllowedValue(value, type) || value === "")
+            checkConstraints(value);
+        }
+      }
+    },
+    [cellIndex, setFocused, type, checkConstraints]
+  );
 
   return (
     <Box className={classes.square} key={cellKey}>
@@ -36,7 +58,8 @@ const SudokuCell = ({
         defaultValue=""
         render={({ field: { onChange } }) => (
           <TextField
-            disabled={disabled}
+            inputRef={focused[cellIndex]}
+            id={`cell-${cellIndex}`}
             value={cellValue ? cellValue : ""}
             inputProps={{ maxLength: 1 }}
             InputProps={{
@@ -44,25 +67,30 @@ const SudokuCell = ({
               classes: {
                 input: classes.text,
                 focused: classes.focused,
-                disabled: classes.disabled,
               },
             }}
             onFocus={(e) => {
-              e.target.select();
+              setFocused(cellIndex);
             }}
             onKeyDown={(e) => {
-              onChange(e);
-              let value = e.nativeEvent.key;
-              if (value === BACKSPACE) value = "";
-              if (checkAllowedValue(value, type) || value === "")
-                checkConstraints(value);
+              if (!disabled) onChange(e);
+              onKeyDown(e);
             }}
-            className={classes.input}
+            className={
+              disabled ? `${classes.input} ${classes.disabled}` : classes.input
+            }
           />
         )}
       />
     </Box>
   );
+};
+
+export const Arrows = {
+  ArrowUp: "ArrowUp",
+  ArrowDown: "ArrowDown",
+  ArrowLeft: "ArrowLeft",
+  ArrowRight: "ArrowRight",
 };
 
 interface StyleProps {
@@ -96,7 +124,7 @@ const useStyles = makeStyles({
     },
   }),
   focused: {
-    backgroundColor: colors.lightBlue,
+    backgroundColor: colors.lightestBlue,
   },
   disabled: {
     backgroundColor: colors.lightestGrey,

@@ -9,9 +9,10 @@ import SudokuCard from "../components/SudokuCard";
 interface Props {
   sudoku: Sudoku[];
   onGoToNewSudoku: () => void;
+  onGoSolveSudoku: (id: number | undefined) => void;
 }
 
-const HomeScreen = ({ sudoku, onGoToNewSudoku }: Props) => {
+const HomeScreen = ({ sudoku, onGoToNewSudoku, onGoSolveSudoku }: Props) => {
   const classes = useStyles();
   return (
     <>
@@ -39,7 +40,11 @@ const HomeScreen = ({ sudoku, onGoToNewSudoku }: Props) => {
             const source = item.boardImage.toString("base64");
             return (
               <Grid item md={3} sm={4} key={`sudoku-card-home-${index}`}>
-                <SudokuCard sudoku={item} image={source} />
+                <SudokuCard
+                  sudoku={item}
+                  image={source}
+                  onGoSolveSudoku={onGoSolveSudoku}
+                />
               </Grid>
             );
           })}

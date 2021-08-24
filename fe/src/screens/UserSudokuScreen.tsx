@@ -9,9 +9,15 @@ interface Props {
   sudoku: Sudoku[];
   user: User | undefined;
   onSudokuPublish: (id: number | undefined) => void;
+  onGoSolveSudoku: (id: number | undefined) => void;
 }
 
-const UserSudokuScreen = ({ sudoku, user, onSudokuPublish }: Props) => {
+const UserSudokuScreen = ({
+  sudoku,
+  user,
+  onSudokuPublish,
+  onGoSolveSudoku,
+}: Props) => {
   return (
     <>
       <Navbar pageName="My Sudoku" />
@@ -32,6 +38,7 @@ const UserSudokuScreen = ({ sudoku, user, onSudokuPublish }: Props) => {
                   image={source}
                   user={user}
                   onSudokuPublish={onSudokuPublish}
+                  onGoSolveSudoku={onGoSolveSudoku}
                 />
               </Grid>
             );
