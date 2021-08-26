@@ -19,7 +19,7 @@ export interface ModalRef {
 
 interface Props {
   title: string;
-  content: JSX.Element;
+  content?: JSX.Element;
   acceptButtonText: string;
   acceptButtonAction: () => void;
 }
@@ -53,7 +53,7 @@ const CustomModal = (
       <DialogTitle>
         <Typography classes={{ root: classes.title }}>{title}</Typography>
       </DialogTitle>
-      <DialogContent>{content}</DialogContent>
+      {content && <DialogContent>{content}</DialogContent>}
       <DialogActions>
         <Button disableRipple onClick={closeDialog}>
           Cancel

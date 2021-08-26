@@ -87,7 +87,8 @@ const Navbar = ({ pageName }: Props) => {
           <Typography className={classes.title}>{pageName}</Typography>
         </div>
         {user ? (
-          <div>
+          <div className={classes.user}>
+            <Typography>{`${user.firstName} ${user.lastName}`}</Typography>
             <IconButton onClick={onMenuOpen} color="inherit">
               <AccountCircle />
             </IconButton>
@@ -117,13 +118,13 @@ const Navbar = ({ pageName }: Props) => {
             <MainButton
               className={classes.loginButton}
               text="Login"
-              type="noRadius"
+              variant="noRadius"
               onClick={onGoToLogin}
             />
             <MainButton
               className={classes.registerButton}
               text="Register"
-              type="noRadius"
+              variant="noRadius"
               onClick={onGoToRegister}
             />
           </div>
@@ -159,6 +160,10 @@ const useStyles = makeStyles({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
+  },
+  user: {
+    display: "flex",
+    alignItems: "center",
   },
 });
 

@@ -1,7 +1,13 @@
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants/auth";
 import { TokenData } from "../../helpers/auth";
 import jwtDecode from "jwt-decode";
-import { Service, ServiceNames, RequestTypes, SudokuProps } from "../service";
+import {
+  Service,
+  ServiceNames,
+  RequestTypes,
+  SudokuProps,
+  SudokuFilters,
+} from "../service";
 import { AppDispatch } from "../../redux/store";
 import { removeUser, setUser } from "../../redux/auth/authRedux";
 import { User, userFromJSON, userToJSON } from "../../types/User";
@@ -90,8 +96,8 @@ class Client implements Service {
     });
   }
 
-  public async getAllSudoku(): Promise<Sudoku[]> {
-    const res = await this.clientInstances.game.get("getAll", {});
+  public async getAllSudoku(filters?: SudokuFilters): Promise<Sudoku[]> {
+    const res = await this.clientInstances.game.post("getAll", { filters });
     return res.map((board: any) => sudokuFromJSON(board));
   }
 
@@ -109,6 +115,10 @@ class Client implements Service {
   public async getSudokuById(id: number): Promise<Sudoku> {
     const res = await this.clientInstances.game.post("getSudokuById", { id });
     return sudokuFromJSON(res);
+  }
+
+  public async deleteSudoku(id: number, published: number): Promise<void> {
+    await this.clientInstances.game.post("deleteSudoku", { id, published });
   }
 }
 

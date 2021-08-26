@@ -48,76 +48,83 @@ const LoginScreen = ({ handleSubmit }: Props) => {
         >
           {t(translations.login_title)}
         </Typography>
-        <Grid container spacing={4}>
-          <Grid item md={6} sm={12} style={{ textAlign: "center" }}>
-            <div className={classes.emailWrapper}>
-              <Controller
-                defaultValue=""
-                name={loginFields.email}
-                rules={loginRules.rules(t).email}
-                render={({ field: { value, onChange } }) => (
-                  <LocalTextField
-                    name={loginFields.email}
-                    onChange={onChange}
-                    value={value}
-                    className={classes.textfield}
-                    label="E-mail"
-                    endAdornment={<EmailRoundedIcon />}
-                  />
+        <form>
+          <Grid container spacing={4}>
+            <Grid item md={6} sm={12} style={{ textAlign: "center" }}>
+              <div className={classes.emailWrapper}>
+                <Controller
+                  defaultValue=""
+                  name={loginFields.email}
+                  rules={loginRules.rules(t).email}
+                  render={({ field: { value, onChange } }) => (
+                    <LocalTextField
+                      name={loginFields.email}
+                      onChange={onChange}
+                      value={value}
+                      className={classes.textfield}
+                      label="E-mail"
+                      endAdornment={<EmailRoundedIcon />}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <FormHelperText className={classes.error} error>
+                    <ErrorIcon fontSize="small" />
+                    <span className={classes.errorText}>
+                      {errors.email?.message}
+                    </span>
+                  </FormHelperText>
                 )}
-              />
-              {errors.email && (
-                <FormHelperText className={classes.error} error>
-                  <ErrorIcon fontSize="small" />
-                  <span className={classes.errorText}>
-                    {errors.email?.message}
-                  </span>
-                </FormHelperText>
-              )}
-            </div>
-            <div className={classes.passwordWrapper}>
-              <Controller
-                defaultValue=""
-                name={loginFields.password}
-                rules={loginRules.rules(t).password}
-                render={({ field: { value, onChange } }) => (
-                  <LocalTextField
-                    name={loginFields.password}
-                    onChange={onChange}
-                    value={value}
-                    className={classes.textfield}
-                    type={showPassword ? "text" : "password"}
-                    label="Password"
-                    endAdornment={
-                      <IconButton
-                        onClick={toggleShowPassword}
-                        style={{ color: "inherit", padding: 0 }}
-                      >
-                        {showPassword ? (
-                          <VisibilityRoundedIcon />
-                        ) : (
-                          <VisibilityOffRoundedIcon />
-                        )}
-                      </IconButton>
-                    }
-                  />
+              </div>
+              <div className={classes.passwordWrapper}>
+                <Controller
+                  defaultValue=""
+                  name={loginFields.password}
+                  rules={loginRules.rules(t).password}
+                  render={({ field: { value, onChange } }) => (
+                    <LocalTextField
+                      name={loginFields.password}
+                      onChange={onChange}
+                      value={value}
+                      className={classes.textfield}
+                      type={showPassword ? "text" : "password"}
+                      label="Password"
+                      endAdornment={
+                        <IconButton
+                          onClick={toggleShowPassword}
+                          style={{ color: "inherit", padding: 0 }}
+                        >
+                          {showPassword ? (
+                            <VisibilityRoundedIcon />
+                          ) : (
+                            <VisibilityOffRoundedIcon />
+                          )}
+                        </IconButton>
+                      }
+                    />
+                  )}
+                />
+                {errors.password && (
+                  <FormHelperText className={classes.error} error>
+                    <ErrorIcon fontSize="small" />
+                    <span className={classes.errorText}>
+                      {errors.password?.message}
+                    </span>
+                  </FormHelperText>
                 )}
+              </div>
+              <MainButton
+                text="Log in"
+                variant="primary"
+                type="submit"
+                onClick={handleSubmit}
               />
-              {errors.password && (
-                <FormHelperText className={classes.error} error>
-                  <ErrorIcon fontSize="small" />
-                  <span className={classes.errorText}>
-                    {errors.password?.message}
-                  </span>
-                </FormHelperText>
-              )}
-            </div>
-            <MainButton text="Log in" type="primary" onClick={handleSubmit} />
+            </Grid>
+            <Grid item md={6}>
+              <img src={loginImage} className={classes.image} alt="" />
+            </Grid>
           </Grid>
-          <Grid item md={6}>
-            <img src={loginImage} className={classes.image} alt="" />
-          </Grid>
-        </Grid>
+        </form>
       </Box>
     </Box>
   );

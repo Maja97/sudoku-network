@@ -2,22 +2,39 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import HomeScreen from "../screens/HomeScreen";
-import service from "../service/service";
+import service, { SudokuFilters } from "../service/service";
 import { Sudoku } from "../types/Sudoku";
 import { goToNewSudoku, goToSingleSudoku } from "../helpers/navigation";
 import { useHistory } from "react-router-dom";
+import { FormProvider, useForm } from "react-hook-form";
+import dayjs from "dayjs";
+
+export const SudokuFiltersFields = {
+  type: "type",
+  publishDate: "publishDate",
+};
+
+const initialFilters = {
+  type: null,
+  publishDate: null,
+};
 
 const HomeContainer = () => {
   const history = useHistory();
   const user = useSelector((state: RootState) => state.auth.user);
+  const [filters, setFilters] = React.useState<SudokuFilters>(initialFilters);
   const [sudoku, setSudoku] = React.useState<Sudoku[]>([]);
+  const formMethods = useForm();
 
   React.useEffect(() => {
     service
-      .getAllSudoku()
+      .getAllSudoku({
+        type: filters["type"],
+        publishDate: filters["publishDate"],
+      })
       .then((res) => setSudoku(res))
       .catch((e) => console.log(e));
-  }, [user]);
+  }, [filters]);
 
   const navigateToNewSudoku = React.useCallback(
     () => goToNewSudoku(history),
@@ -31,12 +48,22 @@ const HomeContainer = () => {
     [history]
   );
 
+  const onFiltersChange = React.useCallback(
+    (key: string, value: string | null) => {
+      setFilters((state) => ({ ...state, [key]: value }));
+    },
+    []
+  );
+
   return (
-    <HomeScreen
-      sudoku={sudoku}
-      onGoToNewSudoku={navigateToNewSudoku}
-      onGoSolveSudoku={navigateToSingleSudoku}
-    />
+    <FormProvider {...formMethods}>
+      <HomeScreen
+        sudoku={sudoku}
+        onFiltersChange={onFiltersChange}
+        onGoToNewSudoku={navigateToNewSudoku}
+        onGoSolveSudoku={navigateToSingleSudoku}
+      />
+    </FormProvider>
   );
 };
 

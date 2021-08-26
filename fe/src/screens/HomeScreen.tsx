@@ -5,14 +5,21 @@ import MainButton from "../components/MainButton";
 import Navbar from "../components/Navbar";
 import ExploreImage from "../assets/svgs/explore_illustration.svg";
 import SudokuCard from "../components/SudokuCard";
+import SudokuFilters from "../components/SudokuFilters";
 
 interface Props {
   sudoku: Sudoku[];
+  onFiltersChange: (key: string, value: string | null) => void;
   onGoToNewSudoku: () => void;
   onGoSolveSudoku: (id: number | undefined) => void;
 }
 
-const HomeScreen = ({ sudoku, onGoToNewSudoku, onGoSolveSudoku }: Props) => {
+const HomeScreen = ({
+  sudoku,
+  onFiltersChange,
+  onGoToNewSudoku,
+  onGoSolveSudoku,
+}: Props) => {
   const classes = useStyles();
   return (
     <>
@@ -23,16 +30,17 @@ const HomeScreen = ({ sudoku, onGoToNewSudoku, onGoSolveSudoku }: Props) => {
             <img src={ExploreImage} className={classes.exploreImage} alt="" />
           </Grid>
           <Grid item md={5} sm={9}>
-            <Typography>
+            <Typography className={classes.info}>
               Explore existing Sudoku puzzles, or go and enter your own unique
               puzzle! After you find one, you can publish it for others to see
               and solve.
             </Typography>
+            <SudokuFilters onFiltersChange={onFiltersChange} />
           </Grid>
           <Grid item md={4} sm={3}>
             <MainButton
               text="New Sudoku"
-              type="secondary"
+              variant="secondary"
               onClick={onGoToNewSudoku}
             />
           </Grid>
@@ -57,6 +65,9 @@ const HomeScreen = ({ sudoku, onGoToNewSudoku, onGoSolveSudoku }: Props) => {
 const useStyles = makeStyles({
   exploreImage: {
     width: "100%",
+  },
+  info: {
+    paddingBottom: 40,
   },
 });
 

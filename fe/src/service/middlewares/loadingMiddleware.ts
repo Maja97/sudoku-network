@@ -3,7 +3,7 @@ import { startLoading, stopLoading } from "../../redux/loading/loadingRedux";
 import { AppDispatch } from "../../redux/store";
 import { Sudoku } from "../../types/Sudoku";
 import { User } from "../../types/User";
-import { Service, SudokuProps } from "../service";
+import { Service, SudokuFilters, SudokuProps } from "../service";
 
 class LoadingMiddleware implements Service {
   constructor(private next: Service, private dispatch: AppDispatch) {}
@@ -90,10 +90,10 @@ class LoadingMiddleware implements Service {
     }
   }
 
-  public async getAllSudoku(): Promise<any> {
+  public async getAllSudoku(filters?: SudokuFilters): Promise<Sudoku[]> {
     try {
       this.dispatch(startLoading(loadingKeys.GET_ALL_SUDOKU));
-      const res = await this.next.getAllSudoku();
+      const res = await this.next.getAllSudoku(filters);
       this.dispatch(stopLoading(loadingKeys.GET_ALL_SUDOKU));
       return res;
     } catch (e) {
@@ -133,6 +133,18 @@ class LoadingMiddleware implements Service {
       return res;
     } catch (e) {
       this.dispatch(stopLoading(loadingKeys.GET_SUDOKU_BY_ID));
+      throw e;
+    }
+  }
+
+  public async deleteSudoku(id: number, published: number): Promise<void> {
+    try {
+      this.dispatch(startLoading(loadingKeys.DELETE_SUDOKU));
+      const res = await this.next.deleteSudoku(id, published);
+      this.dispatch(stopLoading(loadingKeys.DELETE_SUDOKU));
+      return res;
+    } catch (e) {
+      this.dispatch(stopLoading(loadingKeys.DELETE_SUDOKU));
       throw e;
     }
   }

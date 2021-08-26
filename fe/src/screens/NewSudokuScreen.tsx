@@ -18,7 +18,7 @@ import CustomModal, { ModalRef } from "../components/CustomModal";
 import LocalTextField from "../components/LocalTextField";
 import MainButton from "../components/MainButton";
 import { CellData } from "../components/SudokuBox";
-import SudokuGrid from "../components/SudokuGrid";
+import SudokuGrid, { CellRef } from "../components/SudokuGrid";
 import colors from "../constants/colors";
 import { sudokuType, SudokuTypeProps } from "../constants/sudokuTypes";
 import { saveSudokuFields } from "../containers/NewSudokuContainer";
@@ -26,6 +26,7 @@ import { saveSudokuRules } from "../helpers/rules";
 import { User } from "../types/User";
 import newSudokuImage from "../assets/svgs/new_sudoku_illustration.svg";
 import Navbar from "../components/Navbar";
+import NumberButtons from "../components/NumberButtons";
 
 interface Props {
   data: CellData[][];
@@ -35,11 +36,13 @@ interface Props {
   imageRef: any;
   user: User | undefined;
   modalRef: MutableRefObject<ModalRef | undefined>;
+  focusedRef: MutableRefObject<CellRef | undefined>;
   onTypeChange: (event: React.ChangeEvent<{ value: unknown }>) => void;
   onCheckUnique: () => void;
   checkConstraints: (value: string, row: number, column: number) => void;
   onSaveSudoku: () => void;
   goToLogin: () => void;
+  enterNumber: (number: string) => void;
 }
 
 const NewSudokuScreen = ({
@@ -50,11 +53,13 @@ const NewSudokuScreen = ({
   user,
   imageRef,
   modalRef,
+  focusedRef,
   onTypeChange,
   onCheckUnique,
   checkConstraints,
   onSaveSudoku,
   goToLogin,
+  enterNumber,
 }: Props) => {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -140,8 +145,19 @@ const NewSudokuScreen = ({
       <Navbar pageName="Add new Sudoku" />
       <Box py={5} px={5}>
         <Grid container spacing={4}>
-          <Grid item md={7} xs={12} className={classes.gridContainer}>
+          <Grid item md={2} className={classes.numberButtons}>
+            <NumberButtons enterNumber={enterNumber} size={type.size} />
+          </Grid>
+          <Grid
+            item
+            lg={5}
+            md={7}
+            sm={10}
+            xs={12}
+            className={classes.gridContainer}
+          >
             <SudokuGrid
+              ref={focusedRef}
               imageRef={imageRef}
               data={data}
               type={type}
@@ -155,14 +171,15 @@ const NewSudokuScreen = ({
                 </Typography>
                 <MainButton
                   className={classes.saveButton}
-                  type="secondary"
+                  variant="secondary"
                   text="Publish or save Sudoku"
                   onClick={onSaveSudokuButtonPress}
                 />
               </div>
             )}
           </Grid>
-          <Grid item md={3}>
+          <Grid item lg={1} md={undefined} sm={undefined} xs={undefined}></Grid>
+          <Grid item lg={3} md={4} sm={12} style={{ alignItems: "start" }}>
             <FormControl classes={{ root: classes.formControl }}>
               <InputLabel shrink>Sudoku type</InputLabel>
               <Select value={sudokuTypeName} onChange={onTypeChange}>
@@ -186,6 +203,7 @@ const NewSudokuScreen = ({
               alt=""
             />
           </Grid>
+          <Grid item md={2} sm={undefined}></Grid>
         </Grid>
         <CustomModal
           title="Save your unique Sudoku puzzle"
@@ -202,8 +220,8 @@ const NewSudokuScreen = ({
 const useStyles = makeStyles({
   gridContainer: {
     display: "flex",
-    alignItems: "center",
     flexDirection: "column",
+    alignItems: "center",
   },
   button: {
     paddingTop: 45,
@@ -234,6 +252,9 @@ const useStyles = makeStyles({
     width: "80%",
     paddingTop: 20,
     textAlign: "center",
+  },
+  numberButtons: {
+    alignSelf: "center",
   },
 });
 

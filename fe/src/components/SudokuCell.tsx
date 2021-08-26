@@ -47,7 +47,7 @@ const SudokuCell = ({
         }
       }
     },
-    [cellIndex, setFocused, type, checkConstraints]
+    [cellIndex, setFocused, type, checkConstraints, disabled]
   );
 
   return (
@@ -58,6 +58,7 @@ const SudokuCell = ({
         defaultValue=""
         render={({ field: { onChange } }) => (
           <TextField
+            autoComplete="off"
             inputRef={focused[cellIndex]}
             id={`cell-${cellIndex}`}
             value={cellValue ? cellValue : ""}
@@ -68,6 +69,9 @@ const SudokuCell = ({
                 input: classes.text,
                 focused: classes.focused,
               },
+            }}
+            onBlur={(e) => {
+              setFocused(-1);
             }}
             onFocus={(e) => {
               setFocused(cellIndex);

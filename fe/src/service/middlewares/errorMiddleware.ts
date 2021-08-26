@@ -1,6 +1,6 @@
 import { showNotification } from "../../redux/notification/notificationRedux";
 import { User } from "../../types/User";
-import { Service, SudokuProps } from "../service";
+import { Service, SudokuFilters, SudokuProps } from "../service";
 import { AppDispatch } from "../../redux/store";
 import { Sudoku } from "../../types/Sudoku";
 
@@ -83,7 +83,6 @@ class ErrorMiddleware implements Service {
     try {
       await this.next.saveSudoku(sudoku);
     } catch (e) {
-      console.log(e.message);
       this.dispatch(
         showNotification({
           message: "Could not save Sudoku",
@@ -95,9 +94,9 @@ class ErrorMiddleware implements Service {
     }
   }
 
-  public async getAllSudoku(): Promise<Sudoku[]> {
+  public async getAllSudoku(filters?: SudokuFilters): Promise<Sudoku[]> {
     try {
-      return await this.next.getAllSudoku();
+      return await this.next.getAllSudoku(filters);
     } catch (e) {
       console.log(e);
       throw e;
@@ -126,6 +125,14 @@ class ErrorMiddleware implements Service {
       return await this.next.getSudokuById(id);
     } catch (e) {
       console.log(e);
+      throw e;
+    }
+  }
+
+  public async deleteSudoku(id: number, published: number): Promise<void> {
+    try {
+      return await this.next.deleteSudoku(id, published);
+    } catch (e) {
       throw e;
     }
   }

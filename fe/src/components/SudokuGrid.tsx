@@ -29,6 +29,10 @@ const SudokuGrid = (
   const getFocusedIndex = React.useCallback(() => focusedIndex, [focusedIndex]);
 
   React.useEffect(() => {
+    resetFocused();
+  }, []);
+
+  const resetFocused = React.useCallback(() => {
     const newFocused = Array(type.size * type.size)
       .fill(0)
       .map((_, i) => focused[i] || createRef());
@@ -37,6 +41,7 @@ const SudokuGrid = (
 
   const onSetFocus = React.useCallback(
     (cellIndex: number, key?: string) => {
+      if (cellIndex === -1) resetFocused();
       if (key) {
         if (key === Arrows.ArrowLeft) {
           if (cellIndex % type.size) {
@@ -59,7 +64,7 @@ const SudokuGrid = (
         setFocusedIndex(cellIndex);
       }
     },
-    [type.size, focused]
+    [type.size, focused, resetFocused]
   );
 
   const boxData = React.useMemo(() => {

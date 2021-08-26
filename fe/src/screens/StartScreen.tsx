@@ -33,7 +33,7 @@ const StartScreen = ({ goToLogin }: Props) => {
           <br /> Have fun!
         </Typography>
 
-        <MainButton text="Log in" type="primary" onClick={goToLogin} />
+        <MainButton text="Log in" variant="primary" onClick={goToLogin} />
         <Link to={RouteNames.Register} className={classes.continue}>
           Don't have an account? Sign up here
         </Link>

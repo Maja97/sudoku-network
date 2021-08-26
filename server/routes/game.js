@@ -17,8 +17,15 @@ router.post("/isUnique", (req, res) => {
 });
 
 router.post("/saveSudoku", verifyToken, async (req, res) => {
-  const { board, published, board_name, board_image, username, type } =
-    req.body;
+  const {
+    board,
+    published,
+    board_name,
+    board_image,
+    username,
+    type,
+    date_published,
+  } = req.body;
   try {
     let results = await db.saveSudoku(
       board,
@@ -26,7 +33,8 @@ router.post("/saveSudoku", verifyToken, async (req, res) => {
       board_name,
       board_image,
       username,
-      type
+      type,
+      date_published
     );
     res.json(results[0]);
   } catch (e) {
@@ -34,9 +42,11 @@ router.post("/saveSudoku", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/getAll", async (req, res) => {
+router.post("/getAll", async (req, res) => {
   try {
-    const results = await db.getAll();
+    const { filters } = req.body;
+    let results = await db.getAll(filters);
+
     res.json(results);
   } catch (e) {
     res.status(500).json("Could not get all Sudokus");
@@ -78,6 +88,21 @@ router.post("/getSudokuById", async (req, res) => {
     res.json(results[0]);
   } catch (e) {
     res.status(500).json({ message: "Sudoku not found" });
+  }
+});
+
+router.post("/deleteSudoku", async (req, res) => {
+  const { id, published } = req.body;
+  let results;
+  try {
+    if (published) {
+      results = await db.deleteUserFromSudoku(id);
+    } else {
+      results = await db.deleteSudoku(id);
+    }
+    res.json(results[0]);
+  } catch (e) {
+    res.status(500).json({ message: "Could not delete Sudoku" });
   }
 });
 

@@ -8,6 +8,7 @@ const loadingKeys = {
   GET_USER_SUDOKU: "GET_USER_SUDOKU",
   PUBLISH_SUDOKU: "PUBLISH_SUDOKU",
   GET_SUDOKU_BY_ID: "GET_SUDOKU_BY_ID",
+  DELETE_SUDOKU: "DELETE_SUDOKU",
 };
 
 export default loadingKeys;

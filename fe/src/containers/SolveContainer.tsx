@@ -6,6 +6,7 @@ import { CellRef } from "../components/SudokuGrid";
 import { sudokuType, SudokuTypeProps } from "../constants/sudokuTypes";
 import { msToMinutesAndSeconds, onValueEnter } from "../helpers/functions";
 import { goToHomePage } from "../helpers/navigation";
+import { columnFromIndex, rowFromIndex } from "../helpers/sudokuConstraints";
 import SolveScreen from "../screens/SolveScreen";
 import service from "../service/service";
 
@@ -61,21 +62,28 @@ const SolveContainer = () => {
     [sudoku, type]
   );
 
-  const writeInFocused = React.useCallback(() => {
-    const index = focusedRef.current?.getFocusedIndex();
-    console.log(index);
-    /*const copy = sudoku.map((a) => a.map((item: any) => ({ ...item })));
-    const board = onValueEnter(copy, row, column, value, type);
-    setSudoku(board);*/
-  }, []);
+  const writeInFocused = React.useCallback(
+    (number: string) => {
+      const index = focusedRef.current?.getFocusedIndex();
+      if (index && index !== -1) {
+        const row = rowFromIndex(index, type.size);
+        const column = columnFromIndex(index, type.size);
+        const copy = sudoku.map((a) => a.map((item: any) => ({ ...item })));
+        const board = onValueEnter(copy, row, column, number, type);
+        setSudoku(board);
+      }
+    },
+    [sudoku, type]
+  );
 
   return (
     <FormProvider {...formMethods}>
       <SolveScreen
         type={type}
         focusedRef={focusedRef}
-        time={msToMinutesAndSeconds(time)}
         sudoku={sudoku}
+        time={msToMinutesAndSeconds(time)}
+        enterNumber={writeInFocused}
         checkConstraints={checkConstraints}
       />
     </FormProvider>

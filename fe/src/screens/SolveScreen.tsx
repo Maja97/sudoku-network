@@ -13,6 +13,7 @@ interface Props {
   type: SudokuTypeProps;
   time: string;
   focusedRef: MutableRefObject<CellRef | undefined>;
+  enterNumber: (number: string) => void;
   checkConstraints: (value: string, row: number, column: number) => void;
 }
 
@@ -21,6 +22,7 @@ const SolveScreen = ({
   type,
   time,
   focusedRef,
+  enterNumber,
   checkConstraints,
 }: Props) => {
   const classes = useStyles();
@@ -58,7 +60,7 @@ const SolveScreen = ({
                 justifyContent: "center",
               }}
             >
-              <NumberButtons size={type.size} />
+              <NumberButtons size={type.size} enterNumber={enterNumber} />
             </Grid>
           </Grid>
         </Box>

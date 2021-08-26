@@ -1,9 +1,12 @@
+import { Dayjs } from "dayjs";
+
 export interface Sudoku {
   board: number[][];
   type: string;
   boardId?: number;
   username: string | null;
   boardName?: string;
+  dateTime?: string;
   boardImage: any;
   published: number;
 }
@@ -23,6 +26,7 @@ export function sudokuFromJSON(maybe: any): Sudoku {
     boardId: maybe.board_id,
     username: maybe.username,
     boardImage: maybe.board_image,
+    dateTime: maybe.date_published,
     boardName: maybe.board_name,
     published: maybe.published,
   };
@@ -34,6 +38,7 @@ export function sudokuToJSON(sudoku: Sudoku) {
     type: sudoku.type,
     username: sudoku.username,
     board_image: sudoku.boardImage,
+    date_published: sudoku.dateTime,
     board_name: sudoku.boardName,
     published: sudoku.published,
   };

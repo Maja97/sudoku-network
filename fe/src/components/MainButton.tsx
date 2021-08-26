@@ -3,21 +3,30 @@ import { Button, makeStyles } from "@material-ui/core";
 import fonts from "../constants/fonts";
 import colors from "../constants/colors";
 
-type ButtonType = "primary" | "secondary" | "noRadius";
+type ButtonVariant = "primary" | "secondary" | "noRadius";
+type ButtonType = "submit" | undefined;
 
 interface Props {
   text: string;
+  variant?: ButtonVariant;
   type?: ButtonType;
   className?: string;
   onClick: () => void;
 }
 
-const MainButton = ({ text, type = "primary", className, onClick }: Props) => {
+const MainButton = ({
+  text,
+  type,
+  variant = "primary",
+  className,
+  onClick,
+}: Props) => {
   const classes = useStyles();
 
   return (
     <Button
-      className={`${classes.button} ${classes[type]} ${className}`}
+      type={type}
+      className={`${classes.button} ${classes[variant]} ${className}`}
       onClick={onClick}
     >
       {text}

@@ -49,179 +49,186 @@ const RegisterScreen = ({ handleSubmit }: Props) => {
         >
           {t(translations.register_title)}
         </Typography>
-        <Grid container>
-          <Grid item md={6} style={{ textAlign: "center" }}>
-            <div className={classes.firstNameWrapper}>
-              <div>
+        <form>
+          <Grid container>
+            <Grid item md={6} style={{ textAlign: "center" }}>
+              <div className={classes.firstNameWrapper}>
+                <div>
+                  <Controller
+                    defaultValue=""
+                    name={registerFields.firstName}
+                    rules={registerRules.rules(t).firstName}
+                    render={({ field: { value, onChange } }) => (
+                      <LocalTextField
+                        name={registerFields.firstName}
+                        onChange={onChange}
+                        value={value}
+                        className={classes.firstName}
+                        label="First name"
+                      />
+                    )}
+                  />
+                  {errors.firstName && (
+                    <FormHelperText className={classes.error} error>
+                      <ErrorIcon type="secondary" />
+                      <span>{errors.firstName?.message}</span>
+                    </FormHelperText>
+                  )}
+                </div>
+                <div>
+                  <Controller
+                    defaultValue=""
+                    name={registerFields.lastName}
+                    rules={registerRules.rules(t).lastName}
+                    render={({ field: { value, onChange } }) => (
+                      <LocalTextField
+                        name={registerFields.lastName}
+                        onChange={onChange}
+                        value={value}
+                        label="Last name"
+                      />
+                    )}
+                  />
+                  {errors.lastName && (
+                    <FormHelperText className={classes.error} error>
+                      <ErrorIcon type="secondary" />
+                      <span>{errors.lastName?.message}</span>
+                    </FormHelperText>
+                  )}
+                </div>
+              </div>
+
+              <div className={classes.wrapper}>
                 <Controller
                   defaultValue=""
-                  name={registerFields.firstName}
-                  rules={registerRules.rules(t).firstName}
+                  name={registerFields.username}
+                  rules={registerRules.rules(t).username}
                   render={({ field: { value, onChange } }) => (
                     <LocalTextField
-                      name={registerFields.firstName}
+                      name={registerFields.username}
                       onChange={onChange}
                       value={value}
-                      className={classes.firstName}
-                      label="First name"
+                      className={classes.textfield}
+                      label="Username"
+                      endAdornment={<AccountCircleIcon />}
                     />
                   )}
                 />
-                {errors.firstName && (
+                {errors.username && (
                   <FormHelperText className={classes.error} error>
                     <ErrorIcon type="secondary" />
-                    <span>{errors.firstName?.message}</span>
+                    <span>{errors.username?.message}</span>
                   </FormHelperText>
                 )}
               </div>
-              <div>
+              <div className={classes.wrapper}>
                 <Controller
                   defaultValue=""
-                  name={registerFields.lastName}
-                  rules={registerRules.rules(t).lastName}
+                  name={registerFields.email}
+                  rules={registerRules.rules(t).email}
                   render={({ field: { value, onChange } }) => (
                     <LocalTextField
-                      name={registerFields.lastName}
+                      name={registerFields.email}
                       onChange={onChange}
                       value={value}
-                      label="Last name"
+                      className={classes.textfield}
+                      label="E-mail"
+                      endAdornment={<EmailRoundedIcon />}
                     />
                   )}
                 />
-                {errors.lastName && (
+                {errors.email && (
                   <FormHelperText className={classes.error} error>
                     <ErrorIcon type="secondary" />
-                    <span>{errors.lastName?.message}</span>
+                    <span>{errors.email?.message}</span>
                   </FormHelperText>
                 )}
               </div>
-            </div>
+              <div className={classes.wrapper}>
+                <Controller
+                  defaultValue=""
+                  name={registerFields.password}
+                  rules={registerRules.rules(t).password}
+                  render={({ field: { value, onChange } }) => (
+                    <LocalTextField
+                      name={registerFields.password}
+                      onChange={onChange}
+                      value={value}
+                      className={classes.textfield}
+                      type={showPassword ? "text" : "password"}
+                      label="Password"
+                      endAdornment={
+                        <IconButton
+                          onClick={toggleShowPassword}
+                          style={{ color: "inherit", padding: 0 }}
+                        >
+                          {showPassword ? (
+                            <VisibilityRoundedIcon />
+                          ) : (
+                            <VisibilityOffRoundedIcon />
+                          )}
+                        </IconButton>
+                      }
+                    />
+                  )}
+                />
 
-            <div className={classes.wrapper}>
-              <Controller
-                defaultValue=""
-                name={registerFields.username}
-                rules={registerRules.rules(t).username}
-                render={({ field: { value, onChange } }) => (
-                  <LocalTextField
-                    name={registerFields.username}
-                    onChange={onChange}
-                    value={value}
-                    className={classes.textfield}
-                    label="Username"
-                    endAdornment={<AccountCircleIcon />}
-                  />
+                {errors.password && (
+                  <FormHelperText className={classes.error} error>
+                    <ErrorIcon type="secondary" />
+                    <span>{errors.password?.message}</span>
+                  </FormHelperText>
                 )}
-              />
-              {errors.username && (
-                <FormHelperText className={classes.error} error>
-                  <ErrorIcon type="secondary" />
-                  <span>{errors.username?.message}</span>
-                </FormHelperText>
-              )}
-            </div>
-            <div className={classes.wrapper}>
-              <Controller
-                defaultValue=""
-                name={registerFields.email}
-                rules={registerRules.rules(t).email}
-                render={({ field: { value, onChange } }) => (
-                  <LocalTextField
-                    name={registerFields.email}
-                    onChange={onChange}
-                    value={value}
-                    className={classes.textfield}
-                    label="E-mail"
-                    endAdornment={<EmailRoundedIcon />}
-                  />
-                )}
-              />
-              {errors.email && (
-                <FormHelperText className={classes.error} error>
-                  <ErrorIcon type="secondary" />
-                  <span>{errors.email?.message}</span>
-                </FormHelperText>
-              )}
-            </div>
-            <div className={classes.wrapper}>
-              <Controller
-                defaultValue=""
-                name={registerFields.password}
-                rules={registerRules.rules(t).password}
-                render={({ field: { value, onChange } }) => (
-                  <LocalTextField
-                    name={registerFields.password}
-                    onChange={onChange}
-                    value={value}
-                    className={classes.textfield}
-                    type={showPassword ? "text" : "password"}
-                    label="Password"
-                    endAdornment={
-                      <IconButton
-                        onClick={toggleShowPassword}
-                        style={{ color: "inherit", padding: 0 }}
-                      >
-                        {showPassword ? (
-                          <VisibilityRoundedIcon />
-                        ) : (
-                          <VisibilityOffRoundedIcon />
-                        )}
-                      </IconButton>
-                    }
-                  />
-                )}
-              />
+              </div>
+              <div className={classes.wrapper}>
+                <Controller
+                  defaultValue=""
+                  name={registerFields.password}
+                  rules={registerRules.rules(t).password}
+                  render={({ field: { value, onChange } }) => (
+                    <LocalTextField
+                      name={registerFields.password}
+                      onChange={onChange}
+                      value={value}
+                      className={classes.textfield}
+                      type={showPassword ? "text" : "password"}
+                      label="Repeat password"
+                      endAdornment={
+                        <IconButton
+                          onClick={toggleShowPassword}
+                          style={{ color: "inherit", padding: 0 }}
+                        >
+                          {showPassword ? (
+                            <VisibilityRoundedIcon />
+                          ) : (
+                            <VisibilityOffRoundedIcon />
+                          )}
+                        </IconButton>
+                      }
+                    />
+                  )}
+                />
 
-              {errors.password && (
-                <FormHelperText className={classes.error} error>
-                  <ErrorIcon type="secondary" />
-                  <span>{errors.password?.message}</span>
-                </FormHelperText>
-              )}
-            </div>
-            <div className={classes.wrapper}>
-              <Controller
-                defaultValue=""
-                name={registerFields.password}
-                rules={registerRules.rules(t).password}
-                render={({ field: { value, onChange } }) => (
-                  <LocalTextField
-                    name={registerFields.password}
-                    onChange={onChange}
-                    value={value}
-                    className={classes.textfield}
-                    type={showPassword ? "text" : "password"}
-                    label="Repeat password"
-                    endAdornment={
-                      <IconButton
-                        onClick={toggleShowPassword}
-                        style={{ color: "inherit", padding: 0 }}
-                      >
-                        {showPassword ? (
-                          <VisibilityRoundedIcon />
-                        ) : (
-                          <VisibilityOffRoundedIcon />
-                        )}
-                      </IconButton>
-                    }
-                  />
+                {errors.password && (
+                  <FormHelperText className={classes.error} error>
+                    <ErrorIcon type="secondary" />
+                    <span>{errors.password?.message}</span>
+                  </FormHelperText>
                 )}
+              </div>
+
+              <MainButton
+                text="Register"
+                type="submit"
+                variant="primary"
+                onClick={handleSubmit}
               />
-
-              {errors.password && (
-                <FormHelperText className={classes.error} error>
-                  <ErrorIcon type="secondary" />
-                  <span>{errors.password?.message}</span>
-                </FormHelperText>
-              )}
-            </div>
-
-            <MainButton text="Register" type="primary" onClick={handleSubmit} />
+            </Grid>
+            <Grid item md={6}>
+              <img src={registerImage} className={classes.image} alt="" />
+            </Grid>
           </Grid>
-          <Grid item md={6}>
-            <img src={registerImage} className={classes.image} alt="" />
-          </Grid>
-        </Grid>
+        </form>
       </Box>
     </Box>
   );

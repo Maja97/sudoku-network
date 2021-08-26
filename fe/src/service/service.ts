@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { SudokuTypeProps } from "../constants/sudokuTypes";
+import { SudokuGridType, SudokuTypeProps } from "../constants/sudokuTypes";
 import store from "../redux/store";
 import { Sudoku } from "../types/Sudoku";
 import { User } from "../types/User";
@@ -14,6 +14,11 @@ export interface SudokuProps {
   type: SudokuTypeProps;
   row: number;
   col: number;
+}
+
+export interface SudokuFilters {
+  type: string | null;
+  publishDate: string | null;
 }
 
 interface AuthService {
@@ -31,10 +36,11 @@ interface UsersService {
 interface GameService {
   isUnique(props: SudokuProps): Promise<boolean>;
   saveSudoku(sudoku: Sudoku): Promise<void>;
-  getAllSudoku(): Promise<Sudoku[]>;
+  getAllSudoku(filters?: SudokuFilters): Promise<Sudoku[]>;
   getUserSudokus(username: string): Promise<Sudoku[]>;
   getSudokuById(id: number): Promise<Sudoku>;
   publishSudoku(id: number): Promise<void>;
+  deleteSudoku(id: number, published: number): Promise<void>;
 }
 
 export const services = ["auth", "users", "game"];

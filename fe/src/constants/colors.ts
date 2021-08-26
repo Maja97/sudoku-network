@@ -13,6 +13,8 @@ const colors = {
   lightRed: "#ffc7c7",
   red: "#F24343",
   lighterBlue: "#70C1FF",
+  darkSlateGrey: "#2f2e41",
+  slateGrey: "#3f3d56",
 };
 
 export default colors;

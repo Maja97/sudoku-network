@@ -9,13 +9,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { showNotification } from "../redux/notification/notificationRedux";
 import { AppDispatch, RootState } from "../redux/store";
 import colors from "../constants/colors";
-import { goToLogin } from "../helpers/navigation";
+import { goToHomePage, goToLogin } from "../helpers/navigation";
 import { useHistory, useLocation } from "react-router-dom";
 import { setBoard } from "../redux/board/boardRedux";
 import { toBlob } from "html-to-image";
 import { Sudoku } from "../types/Sudoku";
 import { ModalRef } from "../components/CustomModal";
 import { onValueEnter } from "../helpers/functions";
+import { columnFromIndex, rowFromIndex } from "../helpers/sudokuConstraints";
+import { CellRef } from "../components/SudokuGrid";
+import dayjs from "dayjs";
 
 export type SudokuData = {
   name: string;
@@ -39,6 +42,7 @@ const NewSudokuContainer = () => {
   const [unique, setUnique] = React.useState<boolean>(false);
   const ref = React.useRef<HTMLDivElement>(null);
   const modalRef = React.useRef<ModalRef>();
+  const focusedRef = React.useRef<CellRef>();
 
   const dispatch = useDispatch<AppDispatch>();
   const history = useHistory();
@@ -141,11 +145,17 @@ const NewSudokuContainer = () => {
                   boardImage: binaryData,
                   username: user ? user.username : null,
                   boardName: fieldData.name,
+                  dateTime: fieldData.publish
+                    ? dayjs().format("YYYY-MM-DD HH:mm:ss")
+                    : undefined,
                   published: fieldData.publish ? 1 : 0,
                 };
                 service
                   .saveSudoku(sudoku)
-                  .then((res) => console.log(res, "success"))
+                  .then((res) => {
+                    if (modalRef.current) modalRef.current.closeDialog();
+                    goToHomePage(history);
+                  })
                   .catch((err) => {
                     if (modalRef.current) modalRef.current.closeDialog();
                   });
@@ -154,13 +164,27 @@ const NewSudokuContainer = () => {
           })
           .catch((e) => console.log(e));
     },
-    [data, user, type.identifier]
+    [data, user, type.identifier, history]
   );
 
   const navigateToLogin = React.useCallback(() => {
     dispatch(setBoard({ board: data, type: type }));
     goToLogin(history, true);
   }, [data, dispatch, history, type]);
+
+  const writeInFocused = React.useCallback(
+    (number: string) => {
+      const index = focusedRef.current?.getFocusedIndex();
+      if (index && index !== -1) {
+        const row = rowFromIndex(index, type.size);
+        const column = columnFromIndex(index, type.size);
+        const copy = data.map((a) => a.map((item: any) => ({ ...item })));
+        const board = onValueEnter(copy, row, column, number, type);
+        setData(board);
+      }
+    },
+    [data, type]
+  );
 
   return (
     <FormProvider {...formMethods}>
@@ -172,11 +196,13 @@ const NewSudokuContainer = () => {
         user={user}
         imageRef={ref}
         modalRef={modalRef}
+        focusedRef={focusedRef}
         onTypeChange={onTypeChange}
         onCheckUnique={onCheckUnique}
         checkConstraints={checkConstraints}
         onSaveSudoku={formMethods.handleSubmit(onSaveSudoku)}
         goToLogin={navigateToLogin}
+        enterNumber={writeInFocused}
       />
     </FormProvider>
   );

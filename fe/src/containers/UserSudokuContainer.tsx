@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { ModalRef } from "../components/CustomModal";
 import { goToSingleSudoku } from "../helpers/navigation";
 import { RootState } from "../redux/store";
 import UserSudokuScreen from "../screens/UserSudokuScreen";
@@ -12,6 +13,7 @@ const UserSudokuContainer = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [sudoku, setSudoku] = React.useState<Sudoku[]>([]);
   const [publishToggle, setPublishToggle] = React.useState(false);
+  const modalRef = React.useRef<ModalRef>();
 
   React.useEffect(() => {
     if (user)
@@ -37,12 +39,30 @@ const UserSudokuContainer = () => {
     [history]
   );
 
+  const onSudokuDelete = React.useCallback(
+    (id: number | undefined, published: number) => {
+      if (id)
+        service
+          .deleteSudoku(id, published)
+          .then((res) => {
+            modalRef.current?.closeDialog();
+            setPublishToggle((prev) => !prev);
+          })
+          .catch((e) => {
+            modalRef.current?.closeDialog();
+          });
+    },
+    []
+  );
+
   return (
     <UserSudokuScreen
       sudoku={sudoku}
+      modalRef={modalRef}
       user={user}
       onSudokuPublish={onSudokuPublish}
       onGoSolveSudoku={onGoToSingleSudoku}
+      onSudokuDelete={onSudokuDelete}
     />
   );
 };
