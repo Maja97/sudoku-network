@@ -13,12 +13,16 @@ import MainButton from "./MainButton";
 import colors from "../constants/colors";
 import { User } from "../types/User";
 import { sudokuType } from "../constants/sudokuTypes";
+import dayjs from "dayjs";
 
 interface Props {
   sudoku: Sudoku;
   image: string;
   user?: User;
-  onOpenDeleteDialog?: (id: number | undefined, published: number) => void;
+  onOpenDeleteDialog?: (
+    id: number | undefined,
+    published: number | null
+  ) => void;
   onSudokuPublish?: (id: number | undefined) => void;
   onGoSolveSudoku: (id: number | undefined) => void;
 }
@@ -36,7 +40,7 @@ const SudokuCard = ({
     () =>
       Object.values(sudokuType).find((item) => item.identifier === sudoku.type)
         ?.name,
-    []
+    [sudoku.type]
   );
 
   return (
@@ -55,7 +59,14 @@ const SudokuCard = ({
             </Typography>
           </Box>
           <img className={classes.sudokuImage} src={image} alt="" />
-          <Typography className={classes.type}>{`Type: ${type}`}</Typography>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography className={classes.info}>{`Type: ${type}`}</Typography>
+            {sudoku.published ? (
+              <Typography className={classes.info}>
+                {dayjs(sudoku.dateTime).format("DD.MM.YYYY. HH:mm:ss")}
+              </Typography>
+            ) : null}
+          </div>
         </CardContent>
         <CardActions className={classes.button}>
           {user && (
@@ -106,7 +117,8 @@ const useStyles = makeStyles({
     justifyContent: "space-between",
     display: "flex",
   },
-  type: {
+
+  info: {
     fontSize: 12,
     fontFamily: fonts.lightItalic,
   },

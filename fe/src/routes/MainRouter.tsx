@@ -13,30 +13,35 @@ import { RouteNames } from "./routes";
 import NewSudokuContainer from "../containers/NewSudokuContainer";
 import UserSudokuContainer from "../containers/UserSudokuContainer";
 import SolveContainer from "../containers/SolveContainer";
+import RouteGuard from "../components/RouteGuard";
+import UserAccountContainer from "../containers/UserAccountContainer";
 
 const MainRouter = () => {
   return (
     <Router>
       <Switch>
-        <Route strict={true} exact={true} path={RouteNames.Start}>
+        <Route strict exact path={RouteNames.Start}>
           <StartContainer />
         </Route>
-        <Route strict={true} exact={true} path={RouteNames.Login}>
+        <Route strict exact path={RouteNames.Login}>
           <LoginContainer />
         </Route>
-        <Route exact={true} strict={true} path={RouteNames.Home}>
+        <Route exact strict path={RouteNames.Home}>
           <HomeContainer />
         </Route>
-        <Route strict={true} exact={true} path={RouteNames.Register}>
+        <Route strict exact path={RouteNames.Register}>
           <RegisterContainer />
         </Route>
-        <Route strict={true} exact={true} path={RouteNames.New}>
+        <Route strict exact path={RouteNames.New}>
           <NewSudokuContainer />
         </Route>
-        <Route strict={true} exact={true} path={RouteNames.MySudoku}>
+        <RouteGuard strict exact path={RouteNames.MySudoku}>
           <UserSudokuContainer />
-        </Route>
-        <Route strict={true} exact={true} path={RouteNames.Solve}>
+        </RouteGuard>
+        <RouteGuard strict exact path={RouteNames.UserAccount}>
+          <UserAccountContainer />
+        </RouteGuard>
+        <Route strict exact path={RouteNames.Solve}>
           <SolveContainer />
         </Route>
         <Redirect to={RouteNames.Start} />

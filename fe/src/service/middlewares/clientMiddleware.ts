@@ -108,8 +108,8 @@ class Client implements Service {
     return res.map((board: any) => sudokuFromJSON(board));
   }
 
-  public async publishSudoku(id: number): Promise<void> {
-    await this.clientInstances.game.post("publishSudoku", { id });
+  public async publishSudoku(id: number, dateTime: string): Promise<void> {
+    await this.clientInstances.game.post("publishSudoku", { id, dateTime });
   }
 
   public async getSudokuById(id: number): Promise<Sudoku> {
@@ -119,6 +119,30 @@ class Client implements Service {
 
   public async deleteSudoku(id: number, published: number): Promise<void> {
     await this.clientInstances.game.post("deleteSudoku", { id, published });
+  }
+
+  public async saveSolved(
+    boardId: number,
+    username: string,
+    time: number
+  ): Promise<void> {
+    await this.clientInstances.solved.post("saveSolved", {
+      boardId,
+      username,
+      time,
+    });
+  }
+
+  public async checkAlreadySolved(
+    boardId: number,
+    username: string
+  ): Promise<number> {
+    const res = await this.clientInstances.solved.post("checkUserSolved", {
+      boardId,
+      username,
+    });
+
+    return res.time;
   }
 }
 

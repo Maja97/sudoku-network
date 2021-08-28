@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid, TextField } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { SudokuFiltersFields } from "../containers/HomeContainer";
 import { Controller } from "react-hook-form";

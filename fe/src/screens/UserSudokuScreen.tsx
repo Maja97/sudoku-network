@@ -12,7 +12,7 @@ interface Props {
   modalRef: MutableRefObject<ModalRef | undefined>;
   onSudokuPublish: (id: number | undefined) => void;
   onGoSolveSudoku: (id: number | undefined) => void;
-  onSudokuDelete: (id: number | undefined, published: number) => void;
+  onSudokuDelete: (id: number | undefined, published: number | null) => void;
 }
 
 const UserSudokuScreen = ({
@@ -25,10 +25,10 @@ const UserSudokuScreen = ({
 }: Props) => {
   const [boardInfo, setBoardInfo] = React.useState<{
     id: number;
-    published: number;
+    published: number | null;
   }>();
   const onOpenDeleteDialog = React.useCallback(
-    (id: number | undefined, published: number) => {
+    (id: number | undefined, published: number | null) => {
       if (id) {
         setBoardInfo({ id: id, published: published });
         modalRef && modalRef.current?.openDialog();

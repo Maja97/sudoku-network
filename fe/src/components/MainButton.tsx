@@ -11,6 +11,8 @@ interface Props {
   variant?: ButtonVariant;
   type?: ButtonType;
   className?: string;
+  startIcon?: JSX.Element;
+  preventDefault?: boolean;
   onClick: () => void;
 }
 
@@ -19,6 +21,8 @@ const MainButton = ({
   type,
   variant = "primary",
   className,
+  startIcon,
+  preventDefault,
   onClick,
 }: Props) => {
   const classes = useStyles();
@@ -28,6 +32,10 @@ const MainButton = ({
       type={type}
       className={`${classes.button} ${classes[variant]} ${className}`}
       onClick={onClick}
+      startIcon={startIcon}
+      onMouseDown={(e) => {
+        if (preventDefault) e.preventDefault();
+      }}
     >
       {text}
     </Button>

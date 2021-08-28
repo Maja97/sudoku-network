@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { SudokuGridType, SudokuTypeProps } from "../constants/sudokuTypes";
+import { SudokuTypeProps } from "../constants/sudokuTypes";
 import store from "../redux/store";
 import { Sudoku } from "../types/Sudoku";
 import { User } from "../types/User";
@@ -39,12 +39,17 @@ interface GameService {
   getAllSudoku(filters?: SudokuFilters): Promise<Sudoku[]>;
   getUserSudokus(username: string): Promise<Sudoku[]>;
   getSudokuById(id: number): Promise<Sudoku>;
-  publishSudoku(id: number): Promise<void>;
-  deleteSudoku(id: number, published: number): Promise<void>;
+  publishSudoku(id: number, dateTime: string): Promise<void>;
+  deleteSudoku(id: number, published: number | null): Promise<void>;
 }
 
-export const services = ["auth", "users", "game"];
-export type ServiceNames = "auth" | "users" | "game";
+interface SolvedService {
+  saveSolved(boardId: number, username: string, time: number): Promise<void>;
+  checkAlreadySolved(boardId: number, username: string): Promise<number>;
+}
+
+export const services = ["auth", "users", "game", "solved"];
+export type ServiceNames = "auth" | "users" | "game" | "solved";
 let service: Service;
 
 const responseBody = (response: AxiosResponse) => response.data;
@@ -66,7 +71,11 @@ const instances: any = {};
 
 services.forEach((service) => (instances[service] = requests(service)));
 
-export interface Service extends AuthService, UsersService, GameService {}
+export interface Service
+  extends AuthService,
+    UsersService,
+    GameService,
+    SolvedService {}
 
 const client = new Client(instances, store.dispatch);
 const errorMiddleware = new ErrorMiddleware(client, store.dispatch);

@@ -36,6 +36,7 @@ router.post("/saveSudoku", verifyToken, async (req, res) => {
       type,
       date_published
     );
+    console.log(results[0], "results in nodejs");
     res.json(results[0]);
   } catch (e) {
     res.status(500).json({ message: "Sudoku not saved" });
@@ -72,9 +73,9 @@ router.post("/getUserSudokus", async (req, res) => {
 });
 
 router.post("/publishSudoku", async (req, res) => {
-  const { id } = req.body;
+  const { id, dateTime } = req.body;
   try {
-    const results = await db.publishSudoku(id);
+    const results = await db.publishSudoku(id, dateTime);
     res.json(results[0]);
   } catch (e) {
     res.status(500).json({ message: "Sudoku not published" });

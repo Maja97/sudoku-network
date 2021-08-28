@@ -12,8 +12,8 @@ const NumberButtons = ({ size, enterNumber }: Props) => {
   const classes = useStyles();
   return (
     <Grid container>
-      {Array.from({ length: size }, (_, i) => i + 1).map((item) => (
-        <Grid item md={4}>
+      {Array.from({ length: size }, (_, i) => i + 1).map((item, index) => (
+        <Grid item md={4} key={`number-button-${index}`}>
           <Button
             className={classes.button}
             onMouseDown={(e) => e.preventDefault()}

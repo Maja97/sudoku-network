@@ -20,6 +20,7 @@ import {
   goToMySudoku,
   goToRegister,
   goToStart,
+  goToUserAccount,
 } from "../helpers/navigation";
 import { useHistory } from "react-router-dom";
 import service from "../service/service";
@@ -73,6 +74,10 @@ const Navbar = ({ pageName }: Props) => {
     goToMySudoku(history);
   }, [history]);
 
+  const onGoToMyAccount = React.useCallback(() => {
+    goToUserAccount(history);
+  }, [history]);
+
   return (
     <AppBar
       position="static"
@@ -107,9 +112,7 @@ const Navbar = ({ pageName }: Props) => {
               onClose={onMenuClose}
             >
               <MenuItem onClick={onGoToMySudoku}>My Sudoku</MenuItem>
-              <MenuItem onClick={() => console.log("accoutn")}>
-                Account
-              </MenuItem>
+              <MenuItem onClick={onGoToMyAccount}>Account</MenuItem>
               <MenuItem onClick={onLogout}>Logout</MenuItem>
             </Menu>
           </div>

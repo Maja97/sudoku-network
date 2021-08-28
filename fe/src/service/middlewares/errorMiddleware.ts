@@ -83,6 +83,7 @@ class ErrorMiddleware implements Service {
     try {
       await this.next.saveSudoku(sudoku);
     } catch (e) {
+      console.log(e, "erorr in middleware");
       this.dispatch(
         showNotification({
           message: "Could not save Sudoku",
@@ -112,9 +113,9 @@ class ErrorMiddleware implements Service {
     }
   }
 
-  public async publishSudoku(id: number): Promise<void> {
+  public async publishSudoku(id: number, dateTime: string): Promise<void> {
     try {
-      await this.next.publishSudoku(id);
+      await this.next.publishSudoku(id, dateTime);
     } catch (e) {
       throw e;
     }
@@ -132,6 +133,29 @@ class ErrorMiddleware implements Service {
   public async deleteSudoku(id: number, published: number): Promise<void> {
     try {
       return await this.next.deleteSudoku(id, published);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async saveSolved(
+    boardId: number,
+    username: string,
+    time: number
+  ): Promise<void> {
+    try {
+      await this.next.saveSolved(boardId, username, time);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async checkAlreadySolved(
+    boardId: number,
+    username: string
+  ): Promise<number> {
+    try {
+      return await this.next.checkAlreadySolved(boardId, username);
     } catch (e) {
       throw e;
     }

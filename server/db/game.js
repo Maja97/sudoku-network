@@ -7,6 +7,12 @@ const types = {
   Standard: "STANDARD",
 };
 
+const timeFilters = {
+  THIS_WEEK: "This week",
+  THIS_YEAR: "This year",
+  THIS_MONTH: "This month",
+};
+
 db.saveSudoku = (
   board,
   published,
@@ -17,9 +23,12 @@ db.saveSudoku = (
   date_published
 ) => {
   return new Promise((resolve, reject) => {
+    let publish;
+    if (published) publish = 1;
+    else publish = null;
     pool.query(
       "INSERT INTO games (board, published, board_name, board_image, username, board_type, date_published) VALUES (?,?,?,?,?,?,?)",
-      [board, published, boardName, boardImage, username, type, date_published],
+      [board, publish, boardName, boardImage, username, type, date_published],
       (error, result) => {
         if (error) return reject(error);
         return resolve(result);
@@ -30,12 +39,23 @@ db.saveSudoku = (
 
 db.getAll = (filters) => {
   return new Promise((resolve, reject) => {
-    let { type, date } = filters;
+    let { type, publishDate } = filters;
+
     const params = [];
     let sql = "SELECT * FROM games WHERE published=1";
     if (type) {
       sql += " AND board_type = ?";
       params.push(types[type]);
+    }
+    if (publishDate) {
+      if (publishDate === timeFilters.THIS_WEEK) {
+        sql += " AND YEARWEEK(date_published, 1) = YEARWEEK(NOW(), 1)";
+      } else if (publishDate === timeFilters.THIS_MONTH) {
+        sql +=
+          "AND MONTH(date_published) = MONTH(NOW()) AND YEAR(date_published) = YEAR(NOW())";
+      } else if (publishDate === timeFilters.THIS_YEAR) {
+        sql += "AND YEAR(date_published) = YEAR(NOW())";
+      }
     }
 
     pool.query(sql, params, (error, result) => {
@@ -58,11 +78,11 @@ db.getUserSudokus = (username) => {
   });
 };
 
-db.publishSudoku = (id) => {
+db.publishSudoku = (id, dateTime) => {
   return new Promise((resolve, reject) => {
     pool.query(
-      "UPDATE games SET published = 1 WHERE board_id = ?",
-      [id],
+      "UPDATE games SET published = 1, date_published = ? WHERE board_id = ?",
+      [dateTime, id],
       (error, result) => {
         if (error) return reject(error);
         return resolve(result);

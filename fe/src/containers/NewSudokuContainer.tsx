@@ -19,6 +19,8 @@ import { onValueEnter } from "../helpers/functions";
 import { columnFromIndex, rowFromIndex } from "../helpers/sudokuConstraints";
 import { CellRef } from "../components/SudokuGrid";
 import dayjs from "dayjs";
+import { startLoading } from "../redux/loading/loadingRedux";
+import loadingKeys from "../constants/loading";
 
 export type SudokuData = {
   name: string;
@@ -129,6 +131,7 @@ const NewSudokuContainer = () => {
 
   const onSaveSudoku = React.useCallback(
     async (fieldData: SudokuData) => {
+      dispatch(startLoading(loadingKeys.SAVE_SUDOKU));
       const board = data.map((item) => item.map((x) => x.value));
       let binaryData: string | ArrayBuffer | null = "";
       if (ref.current)
@@ -164,7 +167,7 @@ const NewSudokuContainer = () => {
           })
           .catch((e) => console.log(e));
     },
-    [data, user, type.identifier, history]
+    [data, user, type.identifier, history, dispatch]
   );
 
   const navigateToLogin = React.useCallback(() => {

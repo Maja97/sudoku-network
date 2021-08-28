@@ -7,37 +7,50 @@ import { Arrows } from "./SudokuCell";
 
 export interface CellRef {
   getFocusedIndex: () => number;
+  setPencilValues: React.Dispatch<React.SetStateAction<string[][]>>;
+  setPencilTrigger: React.Dispatch<React.SetStateAction<boolean[]>>;
 }
 
 interface Props {
   data: CellData[][];
   type: SudokuTypeProps;
   imageRef?: any;
+  pencilMode?: boolean;
   checkConstraints: (value: string, row: number, column: number) => void;
 }
 
 const SudokuGrid = (
-  { data, type, imageRef, checkConstraints }: Props,
+  { data, type, imageRef, pencilMode, checkConstraints }: Props,
   ref: any
 ) => {
   const classes = useStyles();
   const [focused, setFocused] = React.useState<any>([]);
   const [focusedIndex, setFocusedIndex] = React.useState<number>(0);
+  const [pencilTrigger, setPencilTrigger] = React.useState<boolean[]>(
+    Array(type.size * type.size).fill(false)
+  );
+  const [pencilValues, setPencilValues] = React.useState<string[][]>(
+    Array(type.size * type.size).fill([])
+  );
 
-  React.useImperativeHandle(ref, (): CellRef => ({ getFocusedIndex }));
+  React.useImperativeHandle(
+    ref,
+    (): CellRef => ({ getFocusedIndex, setPencilValues, setPencilTrigger })
+  );
 
   const getFocusedIndex = React.useCallback(() => focusedIndex, [focusedIndex]);
-
-  React.useEffect(() => {
-    resetFocused();
-  }, []);
 
   const resetFocused = React.useCallback(() => {
     const newFocused = Array(type.size * type.size)
       .fill(0)
       .map((_, i) => focused[i] || createRef());
     setFocused(newFocused);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type.size]);
+
+  React.useEffect(() => {
+    resetFocused();
+  }, [resetFocused]);
 
   const onSetFocus = React.useCallback(
     (cellIndex: number, key?: string) => {
@@ -94,6 +107,11 @@ const SudokuGrid = (
               type={type}
               key={index}
               focused={focused}
+              pencilMode={pencilMode}
+              pencilTrigger={pencilTrigger}
+              setPencilTrigger={setPencilTrigger}
+              pencilValues={pencilValues}
+              setPencilValues={setPencilValues}
               onSetFocus={onSetFocus}
               checkConstraints={checkConstraints}
             />
@@ -106,6 +124,9 @@ const SudokuGrid = (
       classes.clear,
       type,
       focused,
+      pencilMode,
+      pencilTrigger,
+      pencilValues,
       checkConstraints,
       onSetFocus,
     ]

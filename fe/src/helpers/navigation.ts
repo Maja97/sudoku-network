@@ -38,3 +38,7 @@ export const goToSingleSudoku = (
 ) => {
   history.push(`${RouteNames.Sudoku}/${id}`);
 };
+
+export const goToUserAccount = (history: History<LocationState>) => {
+  history.push(RouteNames.UserAccount);
+};

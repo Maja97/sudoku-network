@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -12,7 +13,7 @@ const UserSudokuContainer = () => {
   const history = useHistory();
   const user = useSelector((state: RootState) => state.auth.user);
   const [sudoku, setSudoku] = React.useState<Sudoku[]>([]);
-  const [publishToggle, setPublishToggle] = React.useState(false);
+  const [publishToggle, setPublishToggle] = React.useState<boolean>(false);
   const modalRef = React.useRef<ModalRef>();
 
   React.useEffect(() => {
@@ -26,7 +27,7 @@ const UserSudokuContainer = () => {
   const onSudokuPublish = React.useCallback((id: number | undefined) => {
     if (id) {
       service
-        .publishSudoku(id)
+        .publishSudoku(id, dayjs().format("YYYY-MM-DD HH:mm:ss"))
         .then((res) => setPublishToggle((prev) => !prev))
         .catch((err) => console.log(err));
     }
@@ -40,7 +41,7 @@ const UserSudokuContainer = () => {
   );
 
   const onSudokuDelete = React.useCallback(
-    (id: number | undefined, published: number) => {
+    (id: number | undefined, published: number | null) => {
       if (id)
         service
           .deleteSudoku(id, published)

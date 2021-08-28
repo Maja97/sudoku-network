@@ -1,13 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 import HomeScreen from "../screens/HomeScreen";
 import service, { SudokuFilters } from "../service/service";
 import { Sudoku } from "../types/Sudoku";
 import { goToNewSudoku, goToSingleSudoku } from "../helpers/navigation";
 import { useHistory } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
-import dayjs from "dayjs";
 
 export const SudokuFiltersFields = {
   type: "type",
@@ -21,7 +18,6 @@ const initialFilters = {
 
 const HomeContainer = () => {
   const history = useHistory();
-  const user = useSelector((state: RootState) => state.auth.user);
   const [filters, setFilters] = React.useState<SudokuFilters>(initialFilters);
   const [sudoku, setSudoku] = React.useState<Sudoku[]>([]);
   const formMethods = useForm();

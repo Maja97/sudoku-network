@@ -81,10 +81,10 @@ class LoadingMiddleware implements Service {
 
   public async saveSudoku(sudoku: Sudoku): Promise<void> {
     try {
-      this.dispatch(startLoading(loadingKeys.SAVE_SUDOKU));
       await this.next.saveSudoku(sudoku);
       this.dispatch(stopLoading(loadingKeys.SAVE_SUDOKU));
     } catch (e) {
+      console.log(e, "error in loading middleware");
       this.dispatch(stopLoading(loadingKeys.SAVE_SUDOKU));
       throw e;
     }
@@ -114,10 +114,10 @@ class LoadingMiddleware implements Service {
     }
   }
 
-  public async publishSudoku(id: number): Promise<void> {
+  public async publishSudoku(id: number, dateTime: string): Promise<void> {
     try {
       this.dispatch(startLoading(loadingKeys.PUBLISH_SUDOKU));
-      await this.next.publishSudoku(id);
+      await this.next.publishSudoku(id, dateTime);
       this.dispatch(stopLoading(loadingKeys.PUBLISH_SUDOKU));
     } catch (e) {
       this.dispatch(stopLoading(loadingKeys.PUBLISH_SUDOKU));
@@ -145,6 +145,37 @@ class LoadingMiddleware implements Service {
       return res;
     } catch (e) {
       this.dispatch(stopLoading(loadingKeys.DELETE_SUDOKU));
+      throw e;
+    }
+  }
+
+  public async saveSolved(
+    boardId: number,
+    username: string,
+    time: number
+  ): Promise<void> {
+    try {
+      this.dispatch(startLoading(loadingKeys.SAVE_SOLVED_SUDOKU));
+      const res = await this.next.saveSolved(boardId, username, time);
+      this.dispatch(stopLoading(loadingKeys.SAVE_SOLVED_SUDOKU));
+      return res;
+    } catch (e) {
+      this.dispatch(stopLoading(loadingKeys.SAVE_SOLVED_SUDOKU));
+      throw e;
+    }
+  }
+
+  public async checkAlreadySolved(
+    boardId: number,
+    username: string
+  ): Promise<number> {
+    try {
+      this.dispatch(startLoading(loadingKeys.CHECK_ALREADY_SOLVED));
+      const res = await this.next.checkAlreadySolved(boardId, username);
+      this.dispatch(stopLoading(loadingKeys.CHECK_ALREADY_SOLVED));
+      return res;
+    } catch (e) {
+      this.dispatch(stopLoading(loadingKeys.CHECK_ALREADY_SOLVED));
       throw e;
     }
   }
