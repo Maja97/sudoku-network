@@ -10,6 +10,18 @@ import { SudokuTypeProps } from "../constants/sudokuTypes";
 import CreateIcon from "@material-ui/icons/Create";
 import MainButton from "../components/MainButton";
 import { msToMinutesAndSeconds } from "../helpers/functions";
+import CustomModal, { ModalRef } from "../components/CustomModal";
+import Rating from "@material-ui/lab/Rating";
+import { Controller } from "react-hook-form";
+import { ratingFields } from "../containers/SolveContainer";
+
+const labels: { [index: string]: string } = {
+  1: "Very easy",
+  2: "Easy",
+  3: "Medium",
+  4: "Hard",
+  5: "Very hard",
+};
 
 interface Props {
   sudoku: CellData[][];
@@ -18,6 +30,10 @@ interface Props {
   pencilMode: boolean;
   solvedTime: number | undefined;
   focusedRef: MutableRefObject<CellRef | undefined>;
+  goBackEnabled: boolean;
+  modalRef: MutableRefObject<ModalRef | undefined>;
+  saveSolved: () => void;
+  goToHomepage: () => void;
   enterNumber: (number: string) => void;
   togglePencilMode: () => void;
   checkConstraints: (value: string, row: number, column: number) => void;
@@ -28,13 +44,45 @@ const SolveScreen = ({
   type,
   time,
   focusedRef,
+  modalRef,
   pencilMode,
   solvedTime,
+  goBackEnabled,
   enterNumber,
+  goToHomepage,
+  saveSolved,
   checkConstraints,
   togglePencilMode,
 }: Props) => {
   const classes = useStyles();
+  const [rating, setRating] = React.useState<number | null>(3);
+  const [hover, setHover] = React.useState(-1);
+  const modalContent = React.useMemo(() => {
+    return (
+      <div className={classes.rating}>
+        <Controller
+          defaultValue={3}
+          name={ratingFields.stars}
+          render={({ field: { value, onChange } }) => (
+            <Rating
+              value={rating}
+              onChange={(event, newValue) => {
+                onChange(event);
+                setRating(newValue);
+              }}
+              onChangeActive={(event, newHover) => {
+                setHover(newHover);
+              }}
+            />
+          )}
+        />
+        {rating !== null && (
+          <Box ml={2}>{labels[hover !== -1 ? hover : rating]}</Box>
+        )}
+      </div>
+    );
+  }, [hover, rating, classes.rating]);
+
   return (
     sudoku && (
       <>
@@ -43,10 +91,17 @@ const SolveScreen = ({
           <Grid container spacing={4}>
             <Grid item md={4}>
               {solvedTime && (
-                <Typography>
+                <Typography className={classes.alreadySolved}>
                   You've already solved this Sudoku. You can do it again, but
                   time will not be measured.
                 </Typography>
+              )}
+              {goBackEnabled && (
+                <MainButton
+                  onClick={goToHomepage}
+                  text="Go back"
+                  variant="secondary"
+                />
               )}
             </Grid>
             <Grid
@@ -63,7 +118,6 @@ const SolveScreen = ({
                   ? `Solved in: ${msToMinutesAndSeconds(solvedTime)}`
                   : time}
               </Typography>
-
               <SudokuGrid
                 ref={focusedRef}
                 data={sudoku}
@@ -97,6 +151,14 @@ const SolveScreen = ({
             </Grid>
           </Grid>
         </Box>
+        <CustomModal
+          title="Rate Sudoku complexity"
+          cancelDisabled
+          ref={modalRef}
+          content={modalContent}
+          acceptButtonAction={saveSolved}
+          acceptButtonText="Save"
+        />
       </>
     )
   );
@@ -107,6 +169,13 @@ const useStyles = makeStyles({
     fontFamily: fonts.black,
     fontSize: 16,
     paddingBottom: 20,
+  },
+  alreadySolved: {
+    paddingBottom: 25,
+  },
+  rating: {
+    display: "flex",
+    alignItems: "center",
   },
 });
 

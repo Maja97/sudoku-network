@@ -152,11 +152,12 @@ class LoadingMiddleware implements Service {
   public async saveSolved(
     boardId: number,
     username: string,
-    time: number
+    time: number,
+    rating: number
   ): Promise<void> {
     try {
       this.dispatch(startLoading(loadingKeys.SAVE_SOLVED_SUDOKU));
-      const res = await this.next.saveSolved(boardId, username, time);
+      const res = await this.next.saveSolved(boardId, username, time, rating);
       this.dispatch(stopLoading(loadingKeys.SAVE_SOLVED_SUDOKU));
       return res;
     } catch (e) {
@@ -176,6 +177,22 @@ class LoadingMiddleware implements Service {
       return res;
     } catch (e) {
       this.dispatch(stopLoading(loadingKeys.CHECK_ALREADY_SOLVED));
+      throw e;
+    }
+  }
+
+  public async getAllSolvedByUser(username: string): Promise<number[]> {
+    try {
+      return await this.next.getAllSolvedByUser(username);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async getSolution(board: number[][]): Promise<number[][]> {
+    try {
+      return await this.next.getSolution(board);
+    } catch (e) {
       throw e;
     }
   }

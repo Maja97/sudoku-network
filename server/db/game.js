@@ -58,6 +58,8 @@ db.getAll = (filters) => {
       }
     }
 
+    sql += " ORDER BY date_published DESC";
+
     pool.query(sql, params, (error, result) => {
       if (error) return reject(error);
       return resolve(result);

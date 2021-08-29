@@ -124,12 +124,14 @@ class Client implements Service {
   public async saveSolved(
     boardId: number,
     username: string,
-    time: number
+    time: number,
+    rating: number
   ): Promise<void> {
     await this.clientInstances.solved.post("saveSolved", {
       boardId,
       username,
       time,
+      rating,
     });
   }
 
@@ -143,6 +145,20 @@ class Client implements Service {
     });
 
     return res.time;
+  }
+
+  public async getAllSolvedByUser(username: string): Promise<number[]> {
+    const res = await this.clientInstances.solved.post("getAllSolvedByUser", {
+      username,
+    });
+    return res;
+  }
+
+  public async getSolution(board: number[][]): Promise<number[][]> {
+    const res = await this.clientInstances.game.post("getSolution", {
+      board,
+    });
+    return res;
   }
 }
 

@@ -4,6 +4,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  Grid,
   makeStyles,
   Typography,
 } from "@material-ui/core";
@@ -13,7 +14,7 @@ import MainButton from "./MainButton";
 import colors from "../constants/colors";
 import { User } from "../types/User";
 import { sudokuType } from "../constants/sudokuTypes";
-import dayjs from "dayjs";
+import Rating from "@material-ui/lab/Rating";
 
 interface Props {
   sudoku: Sudoku;
@@ -23,6 +24,7 @@ interface Props {
     id: number | undefined,
     published: number | null
   ) => void;
+  avgRating?: number;
   onSudokuPublish?: (id: number | undefined) => void;
   onGoSolveSudoku: (id: number | undefined) => void;
 }
@@ -31,6 +33,7 @@ const SudokuCard = ({
   sudoku,
   image,
   user,
+  avgRating,
   onOpenDeleteDialog,
   onSudokuPublish,
   onGoSolveSudoku,
@@ -48,25 +51,53 @@ const SudokuCard = ({
       <Card>
         <CardContent>
           <Box className={classes.sudokuInfo}>
-            <Typography className={classes.sudokuName}>
-              {`#${sudoku.boardId}`}
-            </Typography>
-            <Typography className={classes.sudokuNameTitle}>
-              Sudoku name:
-            </Typography>
-            <Typography className={classes.sudokuName}>
-              {sudoku.boardName ? sudoku.boardName : `-`}
-            </Typography>
+            <div>
+              <Typography className={classes.sudokuName}>
+                {`#${sudoku.boardId}`}
+              </Typography>
+              <Typography className={classes.sudokuNameTitle}>
+                Sudoku name:
+              </Typography>
+              <Typography className={classes.sudokuName}>
+                {sudoku.boardName ? sudoku.boardName : `-`}
+              </Typography>
+            </div>
+            <div>
+              {avgRating && (
+                <Rating
+                  value={avgRating}
+                  readOnly
+                  precision={0.5}
+                  size="small"
+                />
+              )}
+              {sudoku.solved && (
+                <Typography className={classes.solved}>Solved</Typography>
+              )}
+            </div>
           </Box>
           <img className={classes.sudokuImage} src={image} alt="" />
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography className={classes.info}>{`Type: ${type}`}</Typography>
-            {sudoku.published ? (
-              <Typography className={classes.info}>
-                {dayjs(sudoku.dateTime).format("DD.MM.YYYY. HH:mm:ss")}
-              </Typography>
-            ) : null}
-          </div>
+          <Grid container>
+            <Grid item md={5}>
+              <Typography
+                className={classes.info}
+              >{`Type: ${type}`}</Typography>
+            </Grid>
+            <Grid item md={7}>
+              {sudoku.username ? (
+                <div>
+                  <Typography className={classes.addedBy}>Added by</Typography>
+                  <Typography className={classes.user}>
+                    {sudoku.username}
+                  </Typography>
+                </div>
+              ) : (
+                <Typography className={classes.addedBy}>
+                  Auto-generated
+                </Typography>
+              )}
+            </Grid>
+          </Grid>
         </CardContent>
         <CardActions className={classes.button}>
           {user && (
@@ -102,6 +133,8 @@ const SudokuCard = ({
 const useStyles = makeStyles({
   sudokuInfo: {
     paddingBottom: 15,
+    display: "flex",
+    justifyContent: "space-between",
   },
   sudokuName: {
     fontSize: 14,
@@ -119,8 +152,24 @@ const useStyles = makeStyles({
   },
 
   info: {
+    fontSize: 14,
+    fontFamily: fonts.lightItalic,
+  },
+  solved: {
+    fontSize: 12,
+    fontFamily: fonts.extraLight,
+    textAlign: "right",
+  },
+  user: {
+    fontSize: 12,
+    fontFamily: fonts.extraLight,
+    overflowWrap: "break-word",
+    textAlign: "right",
+  },
+  addedBy: {
     fontSize: 12,
     fontFamily: fonts.lightItalic,
+    textAlign: "right",
   },
 });
 

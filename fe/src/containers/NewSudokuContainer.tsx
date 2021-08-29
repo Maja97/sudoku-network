@@ -3,7 +3,6 @@ import NewSudokuScreen from "../screens/NewSudokuScreen";
 import { sudokuType, SudokuTypeProps } from "../constants/sudokuTypes";
 import { CellData } from "../components/SudokuBox";
 import { FormProvider, useForm } from "react-hook-form";
-import { generateEmptyGrid } from "../helpers/game";
 import service from "../service/service";
 import { useDispatch, useSelector } from "react-redux";
 import { showNotification } from "../redux/notification/notificationRedux";
@@ -16,7 +15,11 @@ import { toBlob } from "html-to-image";
 import { Sudoku } from "../types/Sudoku";
 import { ModalRef } from "../components/CustomModal";
 import { onValueEnter } from "../helpers/functions";
-import { columnFromIndex, rowFromIndex } from "../helpers/sudokuConstraints";
+import {
+  columnFromIndex,
+  generateEmptyGrid,
+  rowFromIndex,
+} from "../helpers/sudokuConstraints";
 import { CellRef } from "../components/SudokuGrid";
 import dayjs from "dayjs";
 import { startLoading } from "../redux/loading/loadingRedux";

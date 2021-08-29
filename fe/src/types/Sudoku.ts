@@ -7,6 +7,7 @@ export interface Sudoku {
   dateTime?: string;
   boardImage: any;
   published: number | null;
+  solved?: boolean;
 }
 
 export function sudokuFromJSON(maybe: any): Sudoku {

@@ -21,6 +21,7 @@ interface Props {
   title: string;
   content?: JSX.Element;
   acceptButtonText: string;
+  cancelDisabled?: boolean;
   acceptButtonAction: () => void;
 }
 
@@ -34,7 +35,13 @@ export const ZoomTransition = React.forwardRef(
 );
 
 const CustomModal = (
-  { title, content, acceptButtonText, acceptButtonAction }: Props,
+  {
+    title,
+    content,
+    acceptButtonText,
+    cancelDisabled,
+    acceptButtonAction,
+  }: Props,
   ref: any
 ) => {
   const classes = useStyles();
@@ -55,9 +62,11 @@ const CustomModal = (
       </DialogTitle>
       {content && <DialogContent>{content}</DialogContent>}
       <DialogActions>
-        <Button disableRipple onClick={closeDialog}>
-          Cancel
-        </Button>
+        {!cancelDisabled && (
+          <Button disableRipple onClick={closeDialog}>
+            Cancel
+          </Button>
+        )}
         <Button
           disableRipple
           className={classes.acceptButton}

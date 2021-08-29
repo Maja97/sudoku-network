@@ -37,3 +37,9 @@ export const msToMinutesAndSeconds = (ms: number) => {
   const seconds = parseInt(((ms % 60000) / 1000).toFixed(0));
   return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
 };
+
+export const arrayEquals = (a: number[][], b: number[][]) =>
+  Array.isArray(a) &&
+  Array.isArray(b) &&
+  a.length === b.length &&
+  a.every((val, row) => val.every((item, col) => item === b[row][col]));

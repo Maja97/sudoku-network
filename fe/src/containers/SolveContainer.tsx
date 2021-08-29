@@ -2,30 +2,46 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
+import { ModalRef } from "../components/CustomModal";
 import { CellData } from "../components/SudokuBox";
 import { CellRef } from "../components/SudokuGrid";
+import colors from "../constants/colors";
 import { MAX_SOLVING_TIME } from "../constants/consts";
 import { sudokuType, SudokuTypeProps } from "../constants/sudokuTypes";
-import { msToMinutesAndSeconds, onValueEnter } from "../helpers/functions";
+import {
+  arrayEquals,
+  msToMinutesAndSeconds,
+  onValueEnter,
+} from "../helpers/functions";
 import { goToHomePage } from "../helpers/navigation";
 import { columnFromIndex, rowFromIndex } from "../helpers/sudokuConstraints";
+import { showNotification } from "../redux/notification/notificationRedux";
 import { RootState } from "../redux/store";
 import SolveScreen from "../screens/SolveScreen";
 import service from "../service/service";
 
+export const ratingFields = {
+  stars: "stars",
+};
+
 const SolveContainer = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
   const formMethods = useForm();
+  const rating = formMethods.watch(ratingFields.stars);
   const user = useSelector((state: RootState) => state.auth.user);
   const focusedRef = React.useRef<CellRef>();
+  const modalRef = React.useRef<ModalRef>();
   const [sudoku, setSudoku] = React.useState<CellData[][]>([]);
+  const [initialBoard, setInitialBoard] = React.useState<number[][]>([]);
   const [type, setType] = React.useState<SudokuTypeProps>(sudokuType.standard);
   const [time, setTime] = React.useState<number>(0);
   const [start, setStart] = React.useState<boolean>(false);
   const [solved, setSolved] = React.useState<number | undefined>();
   const [pencilMode, setPencilMode] = React.useState<boolean>(false);
-
+  const [goBackEnabled, setGoBackEnabled] = React.useState<boolean>(false);
+  console.log(rating);
   const errors = React.useMemo(
     () => sudoku.flat().filter((item) => item.error).length > 0,
     [sudoku]
@@ -60,6 +76,7 @@ const SolveContainer = () => {
           );
           if (specificType) setType(specificType);
           setSudoku(data);
+          setInitialBoard(res.board);
         })
         .catch((e) => goToHomePage(history));
     }
@@ -67,25 +84,33 @@ const SolveContainer = () => {
 
   const checkSolvedSudoku = React.useCallback(() => {
     if (start) {
-      // takodjer provjerit jel valja sudoku i onda ak da spremit rezultaat vremenski
-      setSudoku((prev) => {
-        const copy = prev.map((a) =>
-          a.map((item) => Object.assign(item, (item.disabled = true)))
-        );
-        return copy;
+      service.getSolution(initialBoard).then((res) => {
+        const userSolved = sudoku.map((item) => item.map((x) => x.value));
+
+        if (arrayEquals(res, userSolved)) {
+          dispatch(
+            showNotification({
+              message: "Solution is correct!",
+              color: colors.white,
+              backgroundColor: colors.green,
+            })
+          );
+
+          setSudoku((prev) => {
+            const copy = prev.map((a) =>
+              a.map((item) => Object.assign(item, (item.disabled = true)))
+            );
+            return copy;
+          });
+          if (user && !solved) {
+            modalRef.current?.openDialog();
+          }
+          setGoBackEnabled(true);
+        }
       });
-      if (user && !solved)
-        //sprema se vrijeme ako već nije riješeno i ako postoji user
-        service
-          .saveSolved(
-            parseInt(id),
-            user?.username,
-            time >= MAX_SOLVING_TIME ? MAX_SOLVING_TIME : time
-          )
-          .catch((e) => console.log(e));
       setStart(false);
     }
-  }, [time, id, user, start, solved]);
+  }, [user, start, solved, sudoku, dispatch, initialBoard]);
 
   React.useEffect(() => {
     if (sudoku.length > 0 && !sudoku.flat().find((item) => !item.value)) {
@@ -166,6 +191,22 @@ const SolveContainer = () => {
     []
   );
 
+  const saveSolved = React.useCallback(() => {
+    if (user && !solved && rating) {
+      service
+        .saveSolved(
+          parseInt(id),
+          user?.username,
+          time >= MAX_SOLVING_TIME ? MAX_SOLVING_TIME : time,
+          rating
+        )
+        .catch((e) => console.log(e));
+      modalRef.current?.closeDialog();
+    }
+  }, [user, solved, id, modalRef, rating, time]);
+
+  const goHome = React.useCallback(() => goToHomePage(history), [history]);
+
   return (
     <FormProvider {...formMethods}>
       <SolveScreen
@@ -174,10 +215,14 @@ const SolveContainer = () => {
         sudoku={sudoku}
         pencilMode={pencilMode}
         solvedTime={solved}
+        goBackEnabled={goBackEnabled}
+        modalRef={modalRef}
         time={msToMinutesAndSeconds(time)}
         enterNumber={writeInFocused}
         checkConstraints={checkConstraints}
         togglePencilMode={togglePencilMode}
+        saveSolved={saveSolved}
+        goToHomepage={goHome}
       />
     </FormProvider>
   );

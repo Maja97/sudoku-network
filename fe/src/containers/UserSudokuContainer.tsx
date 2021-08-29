@@ -20,7 +20,23 @@ const UserSudokuContainer = () => {
     if (user)
       service
         .getUserSudokus(user.username)
-        .then((res) => setSudoku(res))
+        .then((res) => {
+          service
+            .getAllSolvedByUser(user.username)
+            .then((all) => {
+              const ids = all.map((item: any) => item.board_id);
+              const newSudoku = res.map((item) =>
+                item.boardId && ids.includes(item.boardId)
+                  ? {
+                      ...item,
+                      solved: true,
+                    }
+                  : item
+              );
+              setSudoku(newSudoku);
+            })
+            .catch((e) => console.log(e));
+        })
         .catch((e) => console.log(e));
   }, [user, publishToggle]);
 

@@ -1,6 +1,16 @@
 import { CellData } from "../components/SudokuBox";
 import { SudokuTypeProps } from "../constants/sudokuTypes";
 
+export const generateEmptyGrid = (
+  sudokuType: SudokuTypeProps
+): CellData[][] => {
+  return Array(sudokuType.size)
+    .fill(0)
+    .map(() =>
+      Array(sudokuType.size).fill({ value: 0, error: false, disabled: false })
+    );
+};
+
 export const checkForConstraints = (
   grid: CellData[][],
   rowIndex: number,

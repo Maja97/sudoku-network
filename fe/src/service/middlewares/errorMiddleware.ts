@@ -141,10 +141,11 @@ class ErrorMiddleware implements Service {
   public async saveSolved(
     boardId: number,
     username: string,
-    time: number
+    time: number,
+    rating: number
   ): Promise<void> {
     try {
-      await this.next.saveSolved(boardId, username, time);
+      await this.next.saveSolved(boardId, username, time, rating);
     } catch (e) {
       throw e;
     }
@@ -156,6 +157,22 @@ class ErrorMiddleware implements Service {
   ): Promise<number> {
     try {
       return await this.next.checkAlreadySolved(boardId, username);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async getAllSolvedByUser(username: string): Promise<number[]> {
+    try {
+      return await this.next.getAllSolvedByUser(username);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async getSolution(board: number[][]): Promise<number[][]> {
+    try {
+      return await this.next.getSolution(board);
     } catch (e) {
       throw e;
     }

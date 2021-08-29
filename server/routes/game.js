@@ -3,14 +3,26 @@ import { isUnique } from "../functions/game.js";
 import db from "../db/game.js";
 import userDb from "../db/users.js";
 import { verifyToken } from "../functions/auth.js";
+import solveWrapper from "../functions/solve.js";
 
 const router = Router();
 
 router.post("/isUnique", (req, res) => {
   const { board, count, type, row, col } = req.body;
   try {
-    const unique = isUnique(board, count, type, row, col) !== 1 ? false : true;
+    const unique = solveWrapper(board).length === 1;
     res.json(unique);
+  } catch (e) {
+    res.sendStatus(513);
+  }
+});
+
+router.post("/getSolution", (req, res) => {
+  const { board } = req.body;
+  try {
+    const solution = solveWrapper(board);
+    const results = solution.length === 1 ? solution : undefined;
+    res.json(results[0]);
   } catch (e) {
     res.sendStatus(513);
   }
@@ -47,7 +59,6 @@ router.post("/getAll", async (req, res) => {
   try {
     const { filters } = req.body;
     let results = await db.getAll(filters);
-
     res.json(results);
   } catch (e) {
     res.status(500).json("Could not get all Sudokus");

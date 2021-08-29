@@ -2,11 +2,11 @@ import pool from "./index.js";
 
 const db = {};
 
-db.saveSolved = (boardId, username, time) => {
+db.saveSolved = (boardId, username, time, rating) => {
   return new Promise((resolve, reject) => {
     pool.query(
-      "INSERT INTO solved (board_id, username, time) VALUES(?,?,?)",
-      [boardId, username, time],
+      "INSERT INTO solved (board_id, username, time, rating) VALUES(?,?,?,?)",
+      [boardId, username, time, rating],
       (error, result) => {
         if (error) return reject(error);
         return resolve(result);
@@ -27,4 +27,18 @@ db.checkUserSolved = (boardId, username) => {
     );
   });
 };
+
+db.getAllSolvedByUser = (username) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "SELECT board_id FROM solved WHERE username=?",
+      [username],
+      (error, result) => {
+        if (error) return reject(error);
+        return resolve(result);
+      }
+    );
+  });
+};
+
 export default db;

@@ -41,11 +41,18 @@ interface GameService {
   getSudokuById(id: number): Promise<Sudoku>;
   publishSudoku(id: number, dateTime: string): Promise<void>;
   deleteSudoku(id: number, published: number | null): Promise<void>;
+  getSolution(board: number[][]): Promise<number[][]>;
 }
 
 interface SolvedService {
-  saveSolved(boardId: number, username: string, time: number): Promise<void>;
+  saveSolved(
+    boardId: number,
+    username: string,
+    time: number,
+    rating: number
+  ): Promise<void>;
   checkAlreadySolved(boardId: number, username: string): Promise<number>;
+  getAllSolvedByUser(username: string): Promise<number[]>;
 }
 
 export const services = ["auth", "users", "game", "solved"];
