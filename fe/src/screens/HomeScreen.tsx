@@ -9,7 +9,7 @@ import SudokuFilters from "../components/SudokuFilters";
 
 interface Props {
   sudoku: Sudoku[];
-  onFiltersChange: (key: string, value: string | null) => void;
+  onFiltersChange: (key: string, value: string | number | null) => void;
   onGoToNewSudoku: () => void;
   onGoSolveSudoku: (id: number | undefined) => void;
 }

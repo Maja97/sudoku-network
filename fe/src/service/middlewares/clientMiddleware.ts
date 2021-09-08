@@ -82,10 +82,7 @@ class Client implements Service {
   public async isUnique(props: SudokuProps): Promise<boolean> {
     const res = await this.clientInstances.game.post("isUnique", {
       board: props.board,
-      count: props.count,
       type: props.type,
-      row: props.row,
-      col: props.col,
     });
     return res;
   }
@@ -154,9 +151,13 @@ class Client implements Service {
     return res;
   }
 
-  public async getSolution(board: number[][]): Promise<number[][]> {
+  public async getSolution(
+    board: number[][],
+    type: string
+  ): Promise<number[][]> {
     const res = await this.clientInstances.game.post("getSolution", {
       board,
+      type,
     });
     return res;
   }

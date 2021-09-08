@@ -34,4 +34,14 @@ router.post("/getAllSolvedByUser", async (req, res) => {
     res.status(500).json({ message: "Could not get Sudoku solved by user" });
   }
 });
+
+router.post("/updateAverageRating", async (req, res) => {
+  const { boardId } = req.body;
+  try {
+    const results = await db.updateAverageRating(boardId);
+    res.json(results);
+  } catch (e) {
+    res.status(500).json({ message: "Could not update average rating" });
+  }
+});
 export default router;

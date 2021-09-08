@@ -11,11 +11,13 @@ import { RootState } from "../redux/store";
 export const SudokuFiltersFields = {
   type: "type",
   publishDate: "publishDate",
+  rating: "rating",
 };
 
 const initialFilters = {
   type: null,
   publishDate: null,
+  rating: null,
 };
 
 const HomeContainer = () => {
@@ -30,6 +32,7 @@ const HomeContainer = () => {
       .getAllSudoku({
         type: filters["type"],
         publishDate: filters["publishDate"],
+        rating: filters["rating"],
       })
       .then((res) => {
         if (user) {
@@ -66,7 +69,7 @@ const HomeContainer = () => {
   );
 
   const onFiltersChange = React.useCallback(
-    (key: string, value: string | null) => {
+    (key: string, value: string | number | null) => {
       setFilters((state) => ({ ...state, [key]: value }));
     },
     []

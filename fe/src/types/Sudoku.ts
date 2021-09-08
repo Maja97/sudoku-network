@@ -8,6 +8,7 @@ export interface Sudoku {
   boardImage: any;
   published: number | null;
   solved?: boolean;
+  averageRating?: number;
 }
 
 export function sudokuFromJSON(maybe: any): Sudoku {
@@ -26,6 +27,7 @@ export function sudokuFromJSON(maybe: any): Sudoku {
     dateTime: maybe.date_published,
     boardName: maybe.board_name,
     published: maybe.published,
+    averageRating: maybe.average_rating,
   };
 }
 

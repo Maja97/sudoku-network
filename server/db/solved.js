@@ -41,4 +41,17 @@ db.getAllSolvedByUser = (username) => {
   });
 };
 
+db.updateAverageRating = (boardId) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "UPDATE games SET average_rating = (SELECT ROUND(AVG(rating),1) FROM solved WHERE board_id = ?) WHERE board_id = ?",
+      [boardId, boardId],
+      (error, result) => {
+        if (error) return reject(error);
+        return resolve(result);
+      }
+    );
+  });
+};
+
 export default db;

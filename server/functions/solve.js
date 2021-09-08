@@ -34,7 +34,12 @@ const splice = (
   return array;
 };
 
-const updatePossibilities = (possibilities, entry) => {
+export const types = {
+  STANDARD: "STANDARD",
+  X: "X",
+};
+
+const updatePossibilities = (possibilities, entry, type) => {
   let [i, j, val] = entry;
   val--;
   const size = possibilities.length;
@@ -55,11 +60,21 @@ const updatePossibilities = (possibilities, entry) => {
     val,
     val + 1
   );
+  if (type === types.X) {
+    if (i === j)
+      for (let it = 0; it < size; it++) {
+        possibilities[it][it][val] = 0;
+      }
+    else if (i == size - j - 1)
+      for (let it = 0; it < size; it++) {
+        possibilities[it][size - it - 1][val] = 0;
+      }
+  }
   possibilities[i][j] = Array(size).fill(0);
   return possibilities;
 };
 
-const getPossibilites = (grid) => {
+const getPossibilites = (grid, type) => {
   const size = grid.length;
   let possibilities = JSON.parse(
     JSON.stringify(Array(size).fill(Array(size).fill(Array(size).fill(1))))
@@ -67,7 +82,11 @@ const getPossibilites = (grid) => {
   for (let i = 0; i < size; i++) {
     for (let j = 0; j < size; j++) {
       if (grid[i][j]) {
-        possibilities = updatePossibilities(possibilities, [i, j, grid[i][j]]);
+        possibilities = updatePossibilities(
+          possibilities,
+          [i, j, grid[i][j]],
+          type
+        );
       }
     }
   }
@@ -103,7 +122,26 @@ const checkNakedSingles = (possibilities) => {
   return foundSingles;
 };
 
-const getHiddenPair = (
+const getHiddenSingleDiagonal = (possibilities, val, isMain, size) => {
+  let index = null;
+  let currentCell;
+  for (let it = 0; it < size; it++) {
+    if (isMain) {
+      currentCell = [it, it];
+    } else currentCell = [it, size - it - 1];
+    const [i, j] = currentCell;
+    if (possibilities[i][j][val] === 1) {
+      if (index === null) {
+        index = [i, j];
+      } else {
+        return false;
+      }
+    }
+  }
+  return index;
+};
+
+const getHiddenSingle = (
   possibilities,
   startRow,
   endRow,
@@ -126,7 +164,7 @@ const getHiddenPair = (
   return index;
 };
 
-const checkHiddenSingles = (possibilities) => {
+const checkHiddenSingles = (possibilities, type) => {
   const foundSingles = new Array();
   const size = possibilities.length;
   const [boxSizeRows, boxSizeCols] = getBoxSize(size);
@@ -136,11 +174,11 @@ const checkHiddenSingles = (possibilities) => {
     const boxStartCol = (it % (size / boxSizeCols)) * boxSizeCols;
     const boxEndCol = boxStartCol + boxSizeCols;
     for (let val = 0; val < size; val++) {
-      let single = getHiddenPair(possibilities, 0, size, it, it + 1, val);
+      let single = getHiddenSingle(possibilities, 0, size, it, it + 1, val);
       if (single) foundSingles.push([...single, val + 1]);
-      single = getHiddenPair(possibilities, it, it + 1, 0, size, val);
+      single = getHiddenSingle(possibilities, it, it + 1, 0, size, val);
       if (single) foundSingles.push([...single, val + 1]);
-      single = getHiddenPair(
+      single = getHiddenSingle(
         possibilities,
         boxStartRow,
         boxEndRow,
@@ -149,14 +187,20 @@ const checkHiddenSingles = (possibilities) => {
         val
       );
       if (single) foundSingles.push([...single, val + 1]);
+      if (type === types.X) {
+        single = getHiddenSingleDiagonal(possibilities, val, true, size);
+        if (single) foundSingles.push([...single, val + 1]);
+        single = getHiddenSingleDiagonal(possibilities, val, false, size);
+        if (single) foundSingles.push([...single, val + 1]);
+      }
     }
   }
   return Array.from(new Set(foundSingles.map(JSON.stringify)), JSON.parse);
 };
 
-const checkSingles = (possibilities) => {
+const checkSingles = (possibilities, type) => {
   const foundSingles = checkNakedSingles(possibilities);
-  foundSingles.push(...checkHiddenSingles(possibilities));
+  foundSingles.push(...checkHiddenSingles(possibilities, type));
   return Array.from(new Set(foundSingles.map(JSON.stringify)), JSON.parse);
 };
 
@@ -271,7 +315,21 @@ const countUnique = (grid, startRow, endRow, startCol, endCol) => {
   return new Set(array).size;
 };
 
-const checkMistake = (grid) => {
+const countUniqueDiagonal = (grid, size, isMain) => {
+  const array = new Array();
+  if (isMain) {
+    for (let it = 0; it < size; it++) {
+      array.push(grid[it][it]);
+    }
+  } else {
+    for (let it = 0; it < size; it++) {
+      array.push(grid[it][size - it - 1]);
+    }
+  }
+  return new Set(array).size;
+};
+
+const checkMistake = (grid, type) => {
   const size = grid.length;
   const [boxSizeRows, boxSizeCols] = getBoxSize(size);
   for (let it = 0; it < size; it++) {
@@ -285,6 +343,10 @@ const checkMistake = (grid) => {
       countUnique(grid, boxStartRow, boxEndRow, boxStartCol, boxEndCol) !== size
     )
       return true;
+    if (type === types.X) {
+      if (countUniqueDiagonal(grid, size, true) !== size) return true;
+      if (countUniqueDiagonal(grid, size, false) !== size) return true;
+    }
   }
   return false;
 };
@@ -314,24 +376,24 @@ const getPossibleCellValues = (cellPossibilities) => {
   return possibleCellValues;
 };
 
-const solve = (grid, possibilities) => {
+const solve = (grid, possibilities, type) => {
   if (checkDeadEnd(grid, possibilities)) return new Array();
   const solutions = new Array();
   let currPosibilities = JSON.parse(JSON.stringify(possibilities));
   let currGrid = JSON.parse(JSON.stringify(grid));
   const size = grid.length;
   while (true) {
-    const singles = checkSingles(currPosibilities);
+    const singles = checkSingles(currPosibilities, type);
     if (!singles.length) break;
     for (let single of singles) {
       const [i, j, val] = single;
       currGrid[i][j] = val;
-      currPosibilities = updatePossibilities(currPosibilities, single);
+      currPosibilities = updatePossibilities(currPosibilities, single, type);
     }
   }
   if (!isIn3d(currPosibilities, 0, size, 0, size, 0, size, 1)) {
     if (checkDeadEnd(currGrid, currPosibilities)) return solutions;
-    if (checkMistake(currGrid)) return solutions;
+    if (checkMistake(currGrid, type)) return solutions;
     solutions.push(currGrid);
   } else {
     const bestIndex = getBestCell(currPosibilities);
@@ -342,9 +404,10 @@ const solve = (grid, possibilities) => {
       gridCopy[i][j] = val;
       const possibilitiesCopy = updatePossibilities(
         JSON.parse(JSON.stringify(currPosibilities)),
-        [i, j, val]
+        [i, j, val],
+        type
       );
-      const newSolutions = solve(gridCopy, possibilitiesCopy);
+      const newSolutions = solve(gridCopy, possibilitiesCopy, type);
       if (newSolutions.length) {
         for (let solution of newSolutions) {
           solutions.push(solution);
@@ -356,8 +419,8 @@ const solve = (grid, possibilities) => {
   return solutions;
 };
 
-const solveWrapper = (grid) => {
-  return solve(grid, getPossibilites(grid));
+const solveWrapper = (grid, type) => {
+  return solve(grid, getPossibilites(grid, type), type);
 };
 
 export default solveWrapper;

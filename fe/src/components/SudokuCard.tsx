@@ -63,9 +63,9 @@ const SudokuCard = ({
               </Typography>
             </div>
             <div>
-              {avgRating && (
+              {sudoku.averageRating && (
                 <Rating
-                  value={avgRating}
+                  value={sudoku.averageRating}
                   readOnly
                   precision={0.5}
                   size="small"
@@ -84,17 +84,13 @@ const SudokuCard = ({
               >{`Type: ${type}`}</Typography>
             </Grid>
             <Grid item md={7}>
-              {sudoku.username ? (
+              {sudoku.username && (
                 <div>
                   <Typography className={classes.addedBy}>Added by</Typography>
                   <Typography className={classes.user}>
                     {sudoku.username}
                   </Typography>
                 </div>
-              ) : (
-                <Typography className={classes.addedBy}>
-                  Auto-generated
-                </Typography>
               )}
             </Grid>
           </Grid>

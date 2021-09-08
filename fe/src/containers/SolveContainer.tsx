@@ -84,7 +84,7 @@ const SolveContainer = () => {
 
   const checkSolvedSudoku = React.useCallback(() => {
     if (start) {
-      service.getSolution(initialBoard).then((res) => {
+      service.getSolution(initialBoard, type.identifier).then((res) => {
         const userSolved = sudoku.map((item) => item.map((x) => x.value));
 
         if (arrayEquals(res, userSolved)) {

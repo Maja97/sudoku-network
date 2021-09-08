@@ -3,6 +3,7 @@ import { User } from "../../types/User";
 import { Service, SudokuFilters, SudokuProps } from "../service";
 import { AppDispatch } from "../../redux/store";
 import { Sudoku } from "../../types/Sudoku";
+import colors from "../../constants/colors";
 
 class ErrorMiddleware implements Service {
   constructor(private next: Service, private dispatch: AppDispatch) {}
@@ -99,7 +100,13 @@ class ErrorMiddleware implements Service {
     try {
       return await this.next.getAllSudoku(filters);
     } catch (e) {
-      console.log(e);
+      this.dispatch(
+        showNotification({
+          message: e.response.data.message,
+          color: colors.black,
+          backgroundColor: colors.red,
+        })
+      );
       throw e;
     }
   }
@@ -170,9 +177,12 @@ class ErrorMiddleware implements Service {
     }
   }
 
-  public async getSolution(board: number[][]): Promise<number[][]> {
+  public async getSolution(
+    board: number[][],
+    type: string
+  ): Promise<number[][]> {
     try {
-      return await this.next.getSolution(board);
+      return await this.next.getSolution(board, type);
     } catch (e) {
       throw e;
     }

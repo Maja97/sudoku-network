@@ -74,7 +74,7 @@ const NewSudokuContainer = () => {
       );
     else {
       await service
-        .isUnique({ board: board, count: 0, type: type, row: 0, col: 0 })
+        .isUnique({ board: board, type: type.identifier })
         .then((res) => {
           if (!res)
             dispatch(

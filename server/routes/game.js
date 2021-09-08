@@ -8,9 +8,9 @@ import solveWrapper from "../functions/solve.js";
 const router = Router();
 
 router.post("/isUnique", (req, res) => {
-  const { board, count, type, row, col } = req.body;
+  const { board, type } = req.body;
   try {
-    const unique = solveWrapper(board).length === 1;
+    const unique = solveWrapper(board, type).length === 1;
     res.json(unique);
   } catch (e) {
     res.sendStatus(513);
@@ -18,13 +18,13 @@ router.post("/isUnique", (req, res) => {
 });
 
 router.post("/getSolution", (req, res) => {
-  const { board } = req.body;
+  const { board, type } = req.body;
   try {
-    const solution = solveWrapper(board);
+    const solution = solveWrapper(board, type);
     const results = solution.length === 1 ? solution : undefined;
     res.json(results[0]);
   } catch (e) {
-    res.sendStatus(513);
+    res.sendStatus(404);
   }
 });
 
@@ -61,7 +61,7 @@ router.post("/getAll", async (req, res) => {
     let results = await db.getAll(filters);
     res.json(results);
   } catch (e) {
-    res.status(500).json("Could not get all Sudokus");
+    res.status(422).json({ message: "Could not get Sudokus" });
   }
 });
 

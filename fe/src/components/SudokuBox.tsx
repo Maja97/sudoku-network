@@ -1,7 +1,11 @@
 import React from "react";
 import { Box, makeStyles } from "@material-ui/core";
 import SudokuCell from "./SudokuCell";
-import { SudokuTypeProps } from "../constants/sudokuTypes";
+import {
+  SudokuGridType,
+  sudokuType,
+  SudokuTypeProps,
+} from "../constants/sudokuTypes";
 
 interface Props {
   data: CellData[][];
@@ -50,10 +54,15 @@ const SudokuBox = ({
               Math.floor(index / type.boxRows) * type.boxRows + boxRow;
             const column = (index % type.boxRows) * type.boxColumns + boxCol;
             const cellIndex = row * type.size + column;
+            let isX = false;
+            if (type.identifier === SudokuGridType.X) {
+              if (row === column || row === type.size - column - 1) isX = true;
+            }
             return (
               <SudokuCell
                 cellValue={cell.value}
                 type={type}
+                isX={isX}
                 disabled={cell.disabled}
                 cellError={cell.error}
                 cellIndex={cellIndex}

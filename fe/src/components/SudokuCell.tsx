@@ -18,6 +18,7 @@ interface Props {
   pencilMode?: boolean;
   pencilValues?: string[];
   pencilTrigger?: boolean;
+  isX: boolean;
   setPencilTrigger?: React.Dispatch<React.SetStateAction<boolean[]>>;
   setPencilValues?: React.Dispatch<React.SetStateAction<string[][]>>;
   setFocused: (cellIndex: number, key?: string) => void;
@@ -36,12 +37,13 @@ const SudokuCell = ({
   pencilMode,
   pencilValues,
   pencilTrigger,
+  isX,
   setPencilTrigger,
   setPencilValues,
   setFocused,
   checkConstraints,
 }: Props) => {
-  const classes = useStyles({ error: cellError });
+  const classes = useStyles({ error: cellError, isX });
   const { control } = useFormContext();
   const [pencilFocused, setPencilFocused] = React.useState<boolean>(false);
   const [firstRender, setFirstRender] = React.useState<boolean>(true);
@@ -146,7 +148,7 @@ const SudokuCell = ({
 
   React.useEffect(() => {
     if (!firstRender) {
-      focused[cellIndex].current.focus();
+      if (focused[cellIndex]) focused[cellIndex].current.focus();
       if (!pencilTrigger && setPencilValues) {
         setPencilValues((prev) => {
           let copy = prev.map((a) => [...a]);
@@ -156,8 +158,7 @@ const SudokuCell = ({
         });
       }
     } else setFirstRender(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pencilTrigger, focused, cellIndex, setPencilValues]);
+  }, [pencilTrigger, focused, cellIndex, setPencilValues, firstRender]);
 
   return (
     <Box className={classes.square} key={cellKey}>
@@ -247,10 +248,11 @@ export const Arrows = {
 
 interface StyleProps {
   error: boolean;
+  isX: boolean;
 }
 
 const useStyles = makeStyles({
-  square: {
+  square: (props: StyleProps) => ({
     width: "50px",
     height: "50px",
     position: "relative",
@@ -261,7 +263,8 @@ const useStyles = makeStyles({
     borderStyle: "solid",
     alignItems: "center",
     overflow: "hidden",
-  },
+    backgroundColor: props.isX ? colors.silver : "inherit",
+  }),
   input: (props: StyleProps) => ({
     backgroundColor: props.error ? colors.lightRed : undefined,
     caretColor: "transparent",

@@ -39,7 +39,7 @@ db.saveSudoku = (
 
 db.getAll = (filters) => {
   return new Promise((resolve, reject) => {
-    let { type, publishDate } = filters;
+    let { type, publishDate, rating } = filters;
 
     const params = [];
     let sql = "SELECT * FROM games WHERE published=1";
@@ -56,6 +56,13 @@ db.getAll = (filters) => {
       } else if (publishDate === timeFilters.THIS_YEAR) {
         sql += "AND YEAR(date_published) = YEAR(NOW())";
       }
+    }
+    if (rating) {
+      sql += " AND ROUND(average_rating) = ?";
+      params.push(rating);
+    }
+    if (rating === 0) {
+      sql += " AND average_rating IS NULL";
     }
 
     sql += " ORDER BY date_published DESC";

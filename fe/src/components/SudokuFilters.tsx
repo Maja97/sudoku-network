@@ -5,9 +5,21 @@ import { SudokuFiltersFields } from "../containers/HomeContainer";
 import { Controller } from "react-hook-form";
 
 interface Props {
-  onFiltersChange: (key: string, value: string | null) => void;
+  onFiltersChange: (key: string, value: string | number | null) => void;
 }
 
+interface RatingValues {
+  [key: string]: number;
+}
+
+const ratingValues: RatingValues = {
+  "Very easy": 1,
+  Easy: 2,
+  Medium: 3,
+  Hard: 4,
+  "Very hard": 5,
+  "No rating": 0,
+};
 const SudokuFilters = ({ onFiltersChange }: Props) => {
   return (
     <Grid container spacing={4}>
@@ -50,6 +62,26 @@ const SudokuFilters = ({ onFiltersChange }: Props) => {
                   label="Publish date"
                   variant="outlined"
                 />
+              )}
+            />
+          )}
+        />
+      </Grid>
+      <Grid item md={6} sm={6}>
+        <Controller
+          name={SudokuFiltersFields.rating}
+          defaultValue={null}
+          render={({ field: { value, onChange } }) => (
+            <Autocomplete
+              value={value}
+              onChange={(e, val) => {
+                onChange(val);
+                onFiltersChange(SudokuFiltersFields.rating, ratingValues[val]);
+              }}
+              options={Object.keys(ratingValues)}
+              getOptionLabel={(option) => option}
+              renderInput={(params) => (
+                <TextField {...params} label="User rating" variant="outlined" />
               )}
             />
           )}

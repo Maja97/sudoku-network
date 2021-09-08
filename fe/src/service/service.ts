@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import { SudokuTypeProps } from "../constants/sudokuTypes";
 import store from "../redux/store";
 import { Sudoku } from "../types/Sudoku";
 import { User } from "../types/User";
@@ -10,15 +9,13 @@ import LoadingMiddleware from "./middlewares/loadingMiddleware";
 
 export interface SudokuProps {
   board: number[][];
-  count: number;
-  type: SudokuTypeProps;
-  row: number;
-  col: number;
+  type: string;
 }
 
 export interface SudokuFilters {
   type: string | null;
   publishDate: string | null;
+  rating: number | null;
 }
 
 interface AuthService {
@@ -41,7 +38,7 @@ interface GameService {
   getSudokuById(id: number): Promise<Sudoku>;
   publishSudoku(id: number, dateTime: string): Promise<void>;
   deleteSudoku(id: number, published: number | null): Promise<void>;
-  getSolution(board: number[][]): Promise<number[][]>;
+  getSolution(board: number[][], type: string): Promise<number[][]>;
 }
 
 interface SolvedService {

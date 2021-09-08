@@ -189,9 +189,12 @@ class LoadingMiddleware implements Service {
     }
   }
 
-  public async getSolution(board: number[][]): Promise<number[][]> {
+  public async getSolution(
+    board: number[][],
+    type: string
+  ): Promise<number[][]> {
     try {
-      return await this.next.getSolution(board);
+      return await this.next.getSolution(board, type);
     } catch (e) {
       throw e;
     }
