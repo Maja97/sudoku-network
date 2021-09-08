@@ -52,9 +52,9 @@ db.getAll = (filters) => {
         sql += " AND YEARWEEK(date_published, 1) = YEARWEEK(NOW(), 1)";
       } else if (publishDate === timeFilters.THIS_MONTH) {
         sql +=
-          "AND MONTH(date_published) = MONTH(NOW()) AND YEAR(date_published) = YEAR(NOW())";
+          " AND MONTH(date_published) = MONTH(NOW()) AND YEAR(date_published) = YEAR(NOW())";
       } else if (publishDate === timeFilters.THIS_YEAR) {
-        sql += "AND YEAR(date_published) = YEAR(NOW())";
+        sql += " AND YEAR(date_published) = YEAR(NOW())";
       }
     }
     if (rating) {

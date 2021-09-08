@@ -61,6 +61,7 @@ router.post("/getAll", async (req, res) => {
     let results = await db.getAll(filters);
     res.json(results);
   } catch (e) {
+    console.log(e);
     res.status(422).json({ message: "Could not get Sudokus" });
   }
 });
