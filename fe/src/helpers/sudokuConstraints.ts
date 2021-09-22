@@ -1,5 +1,5 @@
 import { CellData } from "../components/SudokuBox";
-import { SudokuTypeProps } from "../constants/sudokuTypes";
+import { SudokuTypeProps, SudokuGridType } from "../constants/sudokuTypes";
 
 export const generateEmptyGrid = (
   sudokuType: SudokuTypeProps
@@ -21,8 +21,51 @@ export const checkForConstraints = (
   return (
     checkRow(grid, value, rowIndex) &&
     checkColumn(grid, value, columnIndex) &&
-    checkBox(grid, value, rowIndex, columnIndex, sudokuType)
+    checkBox(grid, value, rowIndex, columnIndex, sudokuType) &&
+    (sudokuType.identifier === SudokuGridType.X
+      ? checkDiagonals(grid, value, rowIndex, columnIndex, sudokuType)
+      : true)
   );
+};
+
+export const checkDiagonals = (
+  grid: CellData[][],
+  value: number,
+  rowIndex: number,
+  columnIndex: number,
+  sudokuType: SudokuTypeProps
+) => {
+  if (
+    rowIndex === columnIndex &&
+    rowIndex === sudokuType.size - columnIndex - 1
+  ) {
+    const bothDiagonals = grid
+      .map((item, row) =>
+        item.filter(
+          (number, column) =>
+            column === row || row === sudokuType.size - column - 1
+        )
+      )
+      .flat()
+      .map((item) => item.value);
+
+    return bothDiagonals.filter((item) => item === value).length <= 1;
+  } else if (rowIndex === columnIndex) {
+    const mainDiagonal = grid
+      .map((item, row) => item.filter((number, column) => column === row))
+      .flat()
+      .map((item) => item.value);
+    return mainDiagonal.filter((item) => item === value).length <= 1;
+  } else if (rowIndex === sudokuType.size - columnIndex - 1) {
+    const secondaryDiagonal = grid
+      .map((item, row) =>
+        item.filter((number, column) => row === sudokuType.size - column - 1)
+      )
+      .flat()
+      .map((item) => item.value);
+    return secondaryDiagonal.filter((item) => item === value).length <= 1;
+  }
+  return true;
 };
 
 export const checkRow = (

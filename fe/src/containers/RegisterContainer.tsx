@@ -13,6 +13,7 @@ import { User } from "../types/User";
 export type RegisterData = {
   email: string;
   password: string;
+  repeatPassword: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -21,6 +22,7 @@ export type RegisterData = {
 export const registerFields = {
   email: "email",
   password: "password",
+  repeatPassword: "repeatPassword",
   username: "username",
   firstName: "firstName",
   lastName: "lastName",
@@ -39,25 +41,35 @@ const RegisterContainer = () => {
   const onSubmit = React.useCallback(
     async (data: RegisterData) => {
       try {
-        const user: User = {
-          email: data.email,
-          username: data.username,
-          firstName: data.firstName,
-          lastName: data.lastName,
-        };
-        await service
-          .register(user, data.password)
-          .then(() => {
-            dispatch(
-              showNotification({
-                message: "Register successful. Please log in now.",
-                color: "white",
-                backgroundColor: "green",
-              })
-            );
-            goToLogin(history);
-          })
-          .catch((err) => console.log(err));
+        if (data.password !== data.repeatPassword)
+          dispatch(
+            showNotification({
+              message: "Passwords do not match!",
+              color: "white",
+              backgroundColor: "red",
+            })
+          );
+        else {
+          const user: User = {
+            email: data.email,
+            username: data.username,
+            firstName: data.firstName,
+            lastName: data.lastName,
+          };
+          await service
+            .register(user, data.password)
+            .then(() => {
+              dispatch(
+                showNotification({
+                  message: "Register successful. Please log in now.",
+                  color: "white",
+                  backgroundColor: "green",
+                })
+              );
+              goToLogin(history);
+            })
+            .catch((err) => console.log(err));
+        }
       } catch (e) {
         onTokenNotFound(dispatch);
       }

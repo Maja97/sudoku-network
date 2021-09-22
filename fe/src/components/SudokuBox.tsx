@@ -1,11 +1,7 @@
 import React from "react";
 import { Box, makeStyles } from "@material-ui/core";
 import SudokuCell from "./SudokuCell";
-import {
-  SudokuGridType,
-  sudokuType,
-  SudokuTypeProps,
-} from "../constants/sudokuTypes";
+import { SudokuGridType, SudokuTypeProps } from "../constants/sudokuTypes";
 
 interface Props {
   data: CellData[][];

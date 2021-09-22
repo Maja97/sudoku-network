@@ -1,6 +1,11 @@
 import { showNotification } from "../../redux/notification/notificationRedux";
 import { User } from "../../types/User";
-import { Service, SudokuFilters, SudokuProps } from "../service";
+import {
+  Service,
+  SudokuFilters,
+  SudokuProps,
+  UpdateUserInterface,
+} from "../service";
 import { AppDispatch } from "../../redux/store";
 import { Sudoku } from "../../types/Sudoku";
 import colors from "../../constants/colors";
@@ -30,7 +35,22 @@ class ErrorMiddleware implements Service {
       this.dispatch(
         showNotification({
           message:
-            "Register failed. Check if all data is correct or try a different email or username as it might already be in use.",
+            "Register failed. Email or username might already be in use.",
+          color: "white",
+          backgroundColor: "red",
+        })
+      );
+      throw e;
+    }
+  }
+
+  public async updateUser(user: UpdateUserInterface): Promise<void> {
+    try {
+      await this.next.updateUser(user);
+    } catch (e) {
+      this.dispatch(
+        showNotification({
+          message: "Could not update user info. Try again later.",
           color: "white",
           backgroundColor: "red",
         })

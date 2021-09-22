@@ -1,7 +1,7 @@
 import { rules, RulesInterface } from "../constants/rules";
 
 export const PASSWORD_MIN_LENGTH = 5;
-export const USERNAME_MIN_LENGTH = 6;
+export const USERNAME_MIN_LENGTH = 2;
 export const NAME_MIN_LENGTH = 2;
 export const MAX_LENGTH = 100;
 export const MAX_SUDOKU_NAME_LENGTH = 50;
@@ -28,6 +28,87 @@ export interface Register {
     username: Partial<RulesInterface> | undefined;
   };
 }
+
+export interface UserAccount {
+  rules: (t: (value: string) => string) => {
+    firstName: Partial<RulesInterface> | undefined;
+    lastName: Partial<RulesInterface> | undefined;
+    password: Partial<RulesInterface> | undefined;
+    username: Partial<RulesInterface> | undefined;
+    email: Partial<RulesInterface> | undefined;
+  };
+}
+
+export const userAccountRules: UserAccount = {
+  rules: (t: (value: string) => string) => ({
+    firstName: {
+      required: (rules(t).required = {
+        value: true,
+        message: "First name is required",
+      }),
+      minLength: rules(t).minLength(
+        NAME_MIN_LENGTH,
+        `Minimal name length is ${NAME_MIN_LENGTH}`
+      ),
+      maxLength: rules(t).maxLength(
+        MAX_LENGTH,
+        `Maximum length for the first name is ${MAX_LENGTH}`
+      ),
+    },
+    lastName: {
+      required: (rules(t).required = {
+        value: true,
+        message: "Last name is required",
+      }),
+      minLength: rules(t).minLength(
+        NAME_MIN_LENGTH,
+        `Minimal name length is ${NAME_MIN_LENGTH}`
+      ),
+      maxLength: rules(t).maxLength(
+        MAX_LENGTH,
+        `Maximum length for the last name is ${MAX_LENGTH}`
+      ),
+    },
+    email: {
+      required: (rules(t).required = {
+        value: true,
+        message: "Mail is required",
+      }),
+      pattern: (rules(t).emailPattern = {
+        value: rules(t).emailPattern.value,
+        message: "Wrong email pattern",
+      }),
+    },
+    username: {
+      required: (rules(t).required = {
+        value: true,
+        message: "Username is required",
+      }),
+      minLength: rules(t).minLength(
+        USERNAME_MIN_LENGTH,
+        `Minimal username length is ${USERNAME_MIN_LENGTH}`
+      ),
+      maxLength: rules(t).maxLength(
+        MAX_LENGTH,
+        `Maximum length for the username is ${MAX_LENGTH}`
+      ),
+    },
+    password: {
+      required: (rules(t).required = {
+        value: true,
+        message: "Password is required",
+      }),
+      minLength: rules(t).minLength(
+        PASSWORD_MIN_LENGTH,
+        `Minimal password length is ${PASSWORD_MIN_LENGTH}`
+      ),
+      maxLength: rules(t).maxLength(
+        MAX_LENGTH,
+        `Maximum length for a password is ${MAX_LENGTH}`
+      ),
+    },
+  }),
+};
 
 export const saveSudokuRules: SaveSudoku = {
   rules: (t: (value: string) => string) => ({

@@ -41,7 +41,6 @@ const LoginContainer = () => {
         const decoded: TokenData = jwtDecode(token);
         const userInfo = await service.readUserById(decoded.userID);
         const at = localStorage.getItem(ACCESS_TOKEN);
-        console.log(at, "login at");
         if (at) setHeaders(at);
         if (location.state && board)
           goToNewSudoku(history, { board: board.board, type: board.type });

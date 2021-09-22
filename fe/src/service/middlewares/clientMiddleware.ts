@@ -7,6 +7,7 @@ import {
   RequestTypes,
   SudokuProps,
   SudokuFilters,
+  UpdateUserInterface,
 } from "../service";
 import { AppDispatch } from "../../redux/store";
 import { removeUser, setUser } from "../../redux/auth/authRedux";
@@ -39,6 +40,17 @@ class Client implements Service {
     await this.clientInstances.auth.post("register", {
       ...userToJSON(user),
       password: password,
+    });
+  }
+
+  public async updateUser(user: UpdateUserInterface): Promise<void> {
+    await this.clientInstances.auth.post("updateUser", {
+      username: user.username,
+      email: user.email,
+      lastName: user.lastName,
+      firstName: user.firstName,
+      password: user.password,
+      oldUsername: user.oldUsername,
     });
   }
 

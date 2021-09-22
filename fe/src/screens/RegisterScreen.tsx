@@ -183,11 +183,11 @@ const RegisterScreen = ({ handleSubmit }: Props) => {
               <div className={classes.wrapper}>
                 <Controller
                   defaultValue=""
-                  name={registerFields.password}
+                  name={registerFields.repeatPassword}
                   rules={registerRules.rules(t).password}
                   render={({ field: { value, onChange } }) => (
                     <LocalTextField
-                      name={registerFields.password}
+                      name={registerFields.repeatPassword}
                       onChange={onChange}
                       value={value}
                       className={classes.textfield}

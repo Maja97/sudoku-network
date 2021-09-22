@@ -110,7 +110,7 @@ const SolveContainer = () => {
       });
       setStart(false);
     }
-  }, [user, start, solved, sudoku, dispatch, initialBoard]);
+  }, [user, start, solved, sudoku, dispatch, initialBoard, type.identifier]);
 
   React.useEffect(() => {
     if (sudoku.length > 0 && !sudoku.flat().find((item) => !item.value)) {

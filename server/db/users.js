@@ -20,4 +20,12 @@ db.one = (id) => {
   });
 };
 
+db.oneByMail = (email) => {
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM users WHERE email = ?", [email], (err, res) => {
+      if (err) return reject(err);
+      return resolve(res);
+    });
+  });
+};
 export default db;

@@ -3,7 +3,12 @@ import { startLoading, stopLoading } from "../../redux/loading/loadingRedux";
 import { AppDispatch } from "../../redux/store";
 import { Sudoku } from "../../types/Sudoku";
 import { User } from "../../types/User";
-import { Service, SudokuFilters, SudokuProps } from "../service";
+import {
+  Service,
+  SudokuFilters,
+  SudokuProps,
+  UpdateUserInterface,
+} from "../service";
 
 class LoadingMiddleware implements Service {
   constructor(private next: Service, private dispatch: AppDispatch) {}
@@ -27,6 +32,17 @@ class LoadingMiddleware implements Service {
       this.dispatch(stopLoading(loadingKeys.REGISTER));
     } catch (e) {
       this.dispatch(stopLoading(loadingKeys.REGISTER));
+      throw e;
+    }
+  }
+
+  public async updateUser(user: UpdateUserInterface): Promise<void> {
+    try {
+      this.dispatch(startLoading(loadingKeys.UPDATE_USER));
+      await this.next.updateUser(user);
+      this.dispatch(stopLoading(loadingKeys.UPDATE_USER));
+    } catch (e) {
+      this.dispatch(stopLoading(loadingKeys.UPDATE_USER));
       throw e;
     }
   }

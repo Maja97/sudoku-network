@@ -18,12 +18,22 @@ export interface SudokuFilters {
   rating: number | null;
 }
 
+export interface UpdateUserInterface {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  oldUsername: string;
+}
+
 interface AuthService {
   login(email: string, password: string): Promise<string>;
   register(user: User, password: string): Promise<void>;
   logout(): Promise<void>;
   checkToken(): Promise<void>;
   refreshToken(refreshToken: string): Promise<string>;
+  updateUser(user: UpdateUserInterface): Promise<void>;
 }
 
 interface UsersService {

@@ -37,4 +37,17 @@ db.login = (email, password) => {
   });
 };
 
+db.updateUser = (email, hash, username, firstName, lastName, oldUsername) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "UPDATE users SET username=?, email=?, password=?, first_name=?, last_name=? WHERE username=?",
+      [username, email, hash, firstName, lastName, oldUsername],
+      (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );
+  });
+};
+
 export default db;
