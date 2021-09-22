@@ -89,7 +89,7 @@ const SolveScreen = ({
         <Navbar pageName="Solve Sudoku" />
         <Box display="flex" justifyContent="center" py={5} px={2}>
           <Grid container spacing={4}>
-            <Grid item md={4}>
+            <Grid item md={3}>
               {solvedTime && (
                 <Typography className={classes.alreadySolved}>
                   You've already solved this Sudoku. You can do it again, but
@@ -106,7 +106,7 @@ const SolveScreen = ({
             </Grid>
             <Grid
               item
-              md={4}
+              md={5}
               style={{
                 display: "flex",
                 flexDirection: "column",
